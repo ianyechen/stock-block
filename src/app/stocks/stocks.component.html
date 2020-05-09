@@ -1,0 +1,53 @@
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">股票名稱</th>
+            <th scope="col">Tesla</th>
+            <th scope="col">Shopify</th>
+            <th scope="col">Apple</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">目前指數</th>
+            <td *ngIf="stocks && stocks[0]">{{ stocks[0].closeValue }}</td>
+            <td *ngIf="stocks && stocks[1]">{{ stocks[1].closeValue }}</td>
+            <td *ngIf="stocks && stocks[2]">{{ stocks[2].closeValue }}</td>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">買時指數</th>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">賺/賠金額</th>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">開盤指數</th>
+            <td *ngIf="stocks && stocks[0]">{{ stocks[0].openValue }}</td>
+            <td *ngIf="stocks && stocks[1]">{{ stocks[1].openValue }}</td>
+            <td *ngIf="stocks && stocks[2]">{{ stocks[2].openValue }}</td>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">昨收指數</th>
+            <td *ngIf="stocks && stocks[0]">{{ stocks[0].prevCloseValue }}</td>
+            <td *ngIf="stocks && stocks[1]">{{ stocks[1].prevCloseValue }}</td>
+            <td *ngIf="stocks && stocks[2]">{{ stocks[2].prevCloseValue }}</td>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">漲/跌金額</th>
+            <td *ngIf="stocks && stocks[0]">{{ stocks[0].valueDiff }}</td>
+            <td *ngIf="stocks && stocks[1]">{{ stocks[1].valueDiff }}</td>
+            <td *ngIf="stocks && stocks[2]">{{ stocks[2].valueDiff }}</td>
+        </tr>
+    </tbody>
+</table>
