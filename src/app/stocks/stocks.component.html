@@ -3,51 +3,94 @@
         <tr>
             <th scope="col">股票名稱</th>
             <th scope="col">Tesla</th>
-            <th scope="col">Shopify</th>
-            <th scope="col">Apple</th>
+            <th scope="col">Shopify (USD)</th>
+            <th scope="col">Shopify (CAD)</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <th scope="row">目前指數</th>
-            <td *ngIf="stocks && stocks[0]">{{ stocks[0].closeValue }}</td>
-            <td *ngIf="stocks && stocks[1]">{{ stocks[1].closeValue }}</td>
-            <td *ngIf="stocks && stocks[2]">{{ stocks[2].closeValue }}</td>
+            <ng-container *ngIf="stocks; then dCur else hCur"></ng-container>
+            <ng-template #dCur>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.closeValue }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hCur>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
         </tr>
         <br>
         <tr>
             <th scope="row">買時指數</th>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ valueOfBought[0] }} &nbsp;&nbsp; <button (click)="edit(0)" type="button"
+                    class="btn btn-secondary btn-sm">更改</button></td>
+            <td>{{ valueOfBought[1] }} &nbsp;&nbsp; <button (click)="edit(1)" type="button"
+                    class="btn btn-secondary btn-sm">更改</button></td>
+            <td>{{ valueOfBought[2] }} &nbsp;&nbsp; <button (click)="edit(2)" type="button"
+                    class="btn btn-secondary btn-sm">更改</button></td>
         </tr>
         <br>
         <tr>
             <th scope="row">賺/賠金額</th>
-            <td></td>
-            <td></td>
-            <td></td>
+            <ng-container *ngIf="stocks; then dnetValue else hnetValue"></ng-container>
+            <ng-template #dnetValue>
+                <ng-container *ngFor="let index of makeArray(3); let count = index;">
+                    <td>{{ (stocks[count].closeValue - valueOfBought[count]).toFixed(2) }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hnetValue>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
         </tr>
         <br>
         <tr>
             <th scope="row">開盤指數</th>
-            <td *ngIf="stocks && stocks[0]">{{ stocks[0].openValue }}</td>
-            <td *ngIf="stocks && stocks[1]">{{ stocks[1].openValue }}</td>
-            <td *ngIf="stocks && stocks[2]">{{ stocks[2].openValue }}</td>
+            <ng-container *ngIf="stocks; then dOpen else hOpen"></ng-container>
+            <ng-template #dOpen>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.openValue }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hOpen>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
         </tr>
         <br>
         <tr>
             <th scope="row">昨收指數</th>
-            <td *ngIf="stocks && stocks[0]">{{ stocks[0].prevCloseValue }}</td>
-            <td *ngIf="stocks && stocks[1]">{{ stocks[1].prevCloseValue }}</td>
-            <td *ngIf="stocks && stocks[2]">{{ stocks[2].prevCloseValue }}</td>
+            <ng-container *ngIf="stocks; then dPrevClose else hPrevClose"></ng-container>
+            <ng-template #dPrevClose>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.prevCloseValue }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hPrevClose>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
         </tr>
         <br>
         <tr>
             <th scope="row">漲/跌金額</th>
-            <td *ngIf="stocks && stocks[0]">{{ stocks[0].valueDiff }}</td>
-            <td *ngIf="stocks && stocks[1]">{{ stocks[1].valueDiff }}</td>
-            <td *ngIf="stocks && stocks[2]">{{ stocks[2].valueDiff }}</td>
+            <ng-container *ngIf="stocks; then dValueDiff else hValueDiff"></ng-container>
+            <ng-template #dValueDiff>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.valueDiff }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hValueDiff>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
         </tr>
     </tbody>
 </table>

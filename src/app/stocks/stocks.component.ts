@@ -10,18 +10,32 @@ import { StockObject } from '../stock';
 export class StocksComponent implements OnInit {
 
   stocks: StockObject[];
+  valueOfBought = [1000, 500, 300];
+  editing: boolean;
+
+  edit(index: number) {
+
+    console.log("editing"+index);
+    this.editing = true;
+
+  }
+
+  makeArray(size: number): any[] {
+    return Array(size);
+  }
 
   async getStocks() {
 
-    let stockObject = this.stockService.getStocks();
+    let stockObject;
 
-    // this.stockService.getStocks().subscribe(stockObject => {
-      console.log(await stockObject);
-      console.log(stockObject["__zone_symbol__value"]);
-      this.stocks = (stockObject["__zone_symbol__value"]);
+    try {
+      stockObject = this.stockService.getStocks();
+      await stockObject;
+      this.stocks = stockObject["__zone_symbol__value"];
+    } catch (error) {
+      console.log(error);
+    }
 
-      
-    // });
   }
 
   constructor(private stockService: StockService) { }
