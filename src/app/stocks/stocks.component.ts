@@ -52,6 +52,7 @@ export class StocksComponent implements OnInit {
     let stockObject;
 
     try {
+      console.log("in stocks components");
       stockObject = this.stockService.getStocks();
       await stockObject;
       this.stocks = stockObject["__zone_symbol__value"];
@@ -76,6 +77,7 @@ export class StocksComponent implements OnInit {
     private getStockBoughtService: GetStocksBoughtService) { }
 
   ngOnInit(): void {
+    console.log("WHAT");
     this.getStocks();
     this.getStocksBought();
   }
