@@ -15,8 +15,8 @@ export class StocksComponent implements OnInit {
   editing = [false, false, false];
   valueOfBought: StockBoughtObject[];
 
-  getColour(value: number) {
-    if (value >= 0) return "text-success";
+  getColour(value: string) {
+    if (+value >= 0) return "text-success";
     else return "text-danger";
   }
 
@@ -55,6 +55,7 @@ export class StocksComponent implements OnInit {
       stockObject = this.stockService.getStocks();
       await stockObject;
       this.stocks = stockObject["__zone_symbol__value"];
+      console.log(this.stocks);
     } catch (error) {
       console.log(error);
     }
