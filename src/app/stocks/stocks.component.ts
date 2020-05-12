@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { StockService } from '../stock.service';
 import { StockObject } from '../stock';
+import { StockBoughtObject } from '../boughtStocks';
+import { GetStocksBoughtService } from '../get-stocks-bought.service';
 
 @Component({
   selector: 'app-stocks',
@@ -10,15 +12,36 @@ import { StockObject } from '../stock';
 export class StocksComponent implements OnInit {
 
   stocks: StockObject[];
-  valueOfBought = [1000, 500, 300];
-  editing: boolean;
+  editing = [false, false, false];
+  valueOfBought: StockBoughtObject[];
+
+  getColour(value: number) {
+    if (value >= 0) return "text-success";
+    else return "text-danger";
+  }
 
   edit(index: number) {
 
-    console.log("editing"+index);
-    this.editing = true;
+    console.log("editing" + index);
+    this.editing[index] = true;
 
   }
+
+  save(index: number, value: number) {
+    console.log("saving " + value + " into " + index);
+    this.editing[index] = false;
+
+    this.getStockBoughtService.saveStock({
+      _id: index,
+      stockName: "test",
+      stockNumber: 2,
+      stockValue: (+value).toFixed(2)
+    }).subscribe(data => {
+      console.log(data);
+      this.valueOfBought = data;
+    })
+  }
+
 
   makeArray(size: number): any[] {
     return Array(size);
@@ -38,10 +61,22 @@ export class StocksComponent implements OnInit {
 
   }
 
-  constructor(private stockService: StockService) { }
+  getStocksBought() {
+
+    this.getStockBoughtService.getStockBought().subscribe(data => {
+      // console.log(data);
+      this.valueOfBought = data;
+      console.log(this.valueOfBought);
+    });
+
+  }
+
+  constructor(private stockService: StockService,
+    private getStockBoughtService: GetStocksBoughtService) { }
 
   ngOnInit(): void {
     this.getStocks();
+    this.getStocksBought();
   }
 
 }
