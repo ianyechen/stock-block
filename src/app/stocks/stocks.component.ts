@@ -21,13 +21,12 @@ export class StocksComponent implements OnInit {
   }
 
   edit(index: number) {
-
-    console.log("editing" + index);
+    console.log("editing " + index);
     this.editing[index] = true;
-
   }
 
   save(index: number, value: number) {
+
     console.log("saving " + value + " into " + index);
     this.editing[index] = false;
 
@@ -40,8 +39,8 @@ export class StocksComponent implements OnInit {
       console.log(data);
       this.valueOfBought = data;
     })
-  }
 
+  }
 
   makeArray(size: number): any[] {
     return Array(size);
@@ -66,7 +65,6 @@ export class StocksComponent implements OnInit {
   getStocksBought() {
 
     this.getStockBoughtService.getStockBought().subscribe(data => {
-      // console.log(data);
       this.valueOfBought = data;
       console.log(this.valueOfBought);
     });
@@ -77,7 +75,6 @@ export class StocksComponent implements OnInit {
     private getStockBoughtService: GetStocksBoughtService) { }
 
   ngOnInit(): void {
-    console.log("WHAT");
     this.getStocks();
     this.getStocksBought();
   }

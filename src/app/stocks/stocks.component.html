@@ -53,7 +53,8 @@
             <ng-container *ngIf="valueOfBought && stocks; then dnetValue else hnetValue"></ng-container>
             <ng-template #dnetValue>
                 <ng-container *ngFor="let index of makeArray(3); let count = index;">
-                    <td [class]="getColour((+(stocks[count].closeValue - valueOfBought[count].stockValue)).toFixed(2))">{{ (+(stocks[count].closeValue - valueOfBought[count].stockValue)).toFixed(2) }}</td>
+                    <td [class]="getColour((+(stocks[count].closeValue - valueOfBought[count].stockValue)).toFixed(2))">
+                        {{ (+(stocks[count].closeValue - valueOfBought[count].stockValue)).toFixed(2) }}</td>
                 </ng-container>
             </ng-template>
             <ng-template #hnetValue>
