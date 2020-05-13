@@ -3,7 +3,8 @@ import { StockObject } from './stock';
 
 import fetch from 'node-fetch';
 
-const key = require('../key.json');
+// const key = require('../key.json').key;
+const key = process.env.KEY;
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class StockService {
 
     for (let count = 0; count < nameOfStock.length; count++) {
 
-      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key.key}`;
+      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key}`;
       fetch(link)
         .then(res => res.json())
         .then(data => {
