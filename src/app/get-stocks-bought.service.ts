@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 export class GetStocksBoughtService {
 
   saveStock(stock) {
-    let link = "http://manage-my-stocks-database.herokuapp.com/items/"+stock._id;
+    let link = "https://manage-my-stocks-database.herokuapp.com/items/"+stock._id;
     return this.http.put(link, stock).pipe(map((response: any) => {
       // response.json();
       console.log(response);
@@ -22,7 +22,7 @@ export class GetStocksBoughtService {
   getStockBought(): Observable<any> {
     console.log("went to get stock");
 
-    return this.http.get('http://manage-my-stocks-database.herokuapp.com/items/all').pipe(map((response: any) => {
+    return this.http.get('https://manage-my-stocks-database.herokuapp.com/items/all').pipe(map((response: any) => {
       console.log(response);
       return response;
       // response.json()
