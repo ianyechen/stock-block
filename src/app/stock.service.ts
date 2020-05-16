@@ -1,4 +1,4 @@
-import { Injectable, ComponentFactoryResolver } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { StockObject } from './stock';
 
 import fetch from 'node-fetch';
@@ -22,7 +22,7 @@ export class StockService {
 
     for (let count = 0; count < nameOfStock.length; count++) {
 
-      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key}`;
+      let link = 'ttps://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key}`;
       fetch(link)
         .then(res => res.json())
         .then(data => {
@@ -56,7 +56,10 @@ export class StockService {
             prevCloseValue: (prevCloseValue).toFixed(2)
           }
 
-          stocks.push(stockObject);
+          let indexOf: number;
+          
+          indexOf = nameOfStock.indexOf(name);
+          stocks[indexOf] = stockObject;
 
         });
 

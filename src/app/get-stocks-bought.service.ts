@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+// let url = "https://manage-my-stocks-database.herokuapp.com/";
+let url = "http://localhost:4000/";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GetStocksBoughtService {
 
-  saveStock(stock) {
-    let link = 'https://manage-my-stocks-database.herokuapp.com/items/' + stock._id;
+  
+  saveStock(stock, idValue) {
+    let link = url + 'stocks/' + idValue;
     return this.http.put(link, stock).pipe(map((response: any) => {
       console.log(response);
       return response;
@@ -17,7 +21,7 @@ export class GetStocksBoughtService {
   }
 
   getStockBought(): Observable<any> {
-    return this.http.get('https://manage-my-stocks-database.herokuapp.com/items/all').pipe(map((response: any) => {
+    return this.http.get(url + 'stocks/all').pipe(map((response: any) => {
       console.log(response);
       return response;
     }));

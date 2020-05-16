@@ -9,8 +9,8 @@
     </thead>
     <tbody>
         <tr>
-            <th scope="row">目前指數</th>
-            <ng-container *ngIf="stocks; then dCur else hCur"></ng-container>
+            <th scope="row">目前股價</th>
+            <ng-container *ngIf="stocks && stocks.length; then dCur else hCur"></ng-container>
             <ng-template #dCur>
                 <ng-container *ngFor="let stock of stocks">
                     <td>{{ stock.closeValue }}</td>
@@ -24,7 +24,7 @@
         </tr>
         <br>
         <tr>
-            <th scope="row">買時指數</th>
+            <th scope="row">買入金額</th>
             <ng-container *ngFor="let index of editing; let count = index;">
                 <ng-container *ngIf="editing[count]; then yesEdit else noEdit"></ng-container>
                 <ng-template #yesEdit>
@@ -41,7 +41,7 @@
                 </ng-template>
                 <ng-template #noEdit>
                     <ng-container *ngIf="valueOfBought">
-                        <td>{{ valueOfBought[count].stockValue }}&nbsp;&nbsp; <button (click)="edit(count)"
+                        <td>{{ valueOfBought[count].item.stockValue }}&nbsp;&nbsp; <button (click)="edit(count)"
                                 type="button" class="btn btn-secondary btn-sm">更改</button></td>
                     </ng-container>
                 </ng-template>
@@ -50,11 +50,11 @@
         <br>
         <tr>
             <th scope="row">賺/賠金額</th>
-            <ng-container *ngIf="valueOfBought && stocks; then dnetValue else hnetValue"></ng-container>
+            <ng-container *ngIf="valueOfBought && stocks && stocks.length; then dnetValue else hnetValue"></ng-container>
             <ng-template #dnetValue>
                 <ng-container *ngFor="let index of makeArray(3); let count = index;">
-                    <td [class]="getColour((+(stocks[count].closeValue - valueOfBought[count].stockValue)).toFixed(2))">
-                        {{ (+(stocks[count].closeValue - valueOfBought[count].stockValue)).toFixed(2) }}</td>
+                    <td [class]="getColour((+(stocks[count].closeValue - valueOfBought[count].item.stockValue)).toFixed(2))">
+                        {{ (+(stocks[count].closeValue - valueOfBought[count].item.stockValue)).toFixed(2) }}</td>
                 </ng-container>
             </ng-template>
             <ng-template #hnetValue>
@@ -66,7 +66,7 @@
         <br>
         <tr>
             <th scope="row">開盤指數</th>
-            <ng-container *ngIf="stocks; then dOpen else hOpen"></ng-container>
+            <ng-container *ngIf="stocks && stocks.length; then dOpen else hOpen"></ng-container>
             <ng-template #dOpen>
                 <ng-container *ngFor="let stock of stocks">
                     <td>{{ stock.openValue }}</td>
@@ -81,7 +81,7 @@
         <br>
         <tr>
             <th scope="row">昨收指數</th>
-            <ng-container *ngIf="stocks; then dPrevClose else hPrevClose"></ng-container>
+            <ng-container *ngIf="stocks && stocks.length; then dPrevClose else hPrevClose"></ng-container>
             <ng-template #dPrevClose>
                 <ng-container *ngFor="let stock of stocks">
                     <td>{{ stock.prevCloseValue }}</td>
@@ -96,10 +96,11 @@
         <br>
         <tr>
             <th scope="row">漲/跌金額</th>
-            <ng-container *ngIf="stocks; then dValueDiff else hValueDiff"></ng-container>
+            <ng-container *ngIf="stocks && stocks.length; then dValueDiff else hValueDiff"></ng-container>
             <ng-template #dValueDiff>
                 <ng-container *ngFor="let stock of stocks">
-                    <td>{{ stock.valueDiff }}</td>
+                    <td [class]="getColour(stock.valueDiff)">
+                        {{ stock.valueDiff }}</td>
                 </ng-container>
             </ng-template>
             <ng-template #hValueDiff>

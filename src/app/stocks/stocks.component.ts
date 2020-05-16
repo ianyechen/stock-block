@@ -11,31 +11,36 @@ import { GetStocksBoughtService } from '../get-stocks-bought.service';
 })
 export class StocksComponent implements OnInit {
 
+  // holds all of the current stock information  
   stocks: StockObject[];
+  // allows for editing or not of personal stock values 
   editing = [false, false, false];
-  valueOfBought: StockBoughtObject[];
+  // holds all of the personal stock values 
+  valueOfBought: any[];
 
+  // changes colour depending if it's a pos or neg number 
   getColour(value: string) {
     if (+value >= 0) return "text-success";
     else return "text-danger";
   }
 
+  // changing the editing array for editing personal stock values 
   edit(index: number) {
     console.log("editing " + index);
     this.editing[index] = true;
   }
 
-  save(index: number, value: number) {
+  // saving the personal stock values into db
+  save(index: string, value: number) {
 
     console.log("saving " + value + " into " + index);
     this.editing[index] = false;
 
     this.getStockBoughtService.saveStock({
-      _id: index,
       stockName: "test",
       stockNumber: 2,
       stockValue: (+value).toFixed(2)
-    }).subscribe(data => {
+    }, index).subscribe(data => {
       console.log(data);
       this.valueOfBought = data;
     })
@@ -46,14 +51,15 @@ export class StocksComponent implements OnInit {
     return Array(size);
   }
 
+  // getting stocks from API call 
   async getStocks() {
 
     let stockObject;
 
     try {
-      console.log("in stocks components");
       stockObject = this.stockService.getStocks();
       await stockObject;
+      this.stocks = [];
       this.stocks = stockObject["__zone_symbol__value"];
       console.log(this.stocks);
     } catch (error) {
@@ -62,6 +68,7 @@ export class StocksComponent implements OnInit {
 
   }
 
+  // getting personal stocks values 
   getStocksBought() {
 
     this.getStockBoughtService.getStockBought().subscribe(data => {
