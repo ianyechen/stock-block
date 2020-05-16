@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TransactionObject } from '../transaction';
 import { GetTransactionsService } from '../get-transactions.service';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-transactions',
@@ -13,6 +12,28 @@ export class TransactionsComponent implements OnInit {
   // holds all of the transactions 
   transactions: TransactionObject[];
   modalNumber: number;
+  stockNames: String[];
+  showHistory: string;
+
+  editHistoryShown(type: string) {
+    this.showHistory = type;
+    console.log(this.showHistory);
+  }
+
+  fillStockNames() {
+    this.stockNames = [];
+    for (let transaction of this.transactions) {
+      if (!this.stockNames.includes(transaction.name) && transaction.valueSell != null) {
+        this.stockNames.push(transaction.name);
+      }
+    }
+  }
+
+  // changes colour depending if it's a pos or neg number 
+  getColour(value: string) {
+    if (+value >= 0) return "text-success";
+    else return "text-danger";
+  }
 
   // saving a transaction (only bought)
   save(name: string, valueBuy: number, dateBuy: number, numberBuy: number) {
@@ -40,7 +61,7 @@ export class TransactionsComponent implements OnInit {
   sell(valueSell: number, dateSell: string) {
     this.transactions[this.modalNumber].valueSell = valueSell;
     this.transactions[this.modalNumber].dateSell = dateSell;
-    this.transactions[this.modalNumber].valueDiff = (valueSell - this.transactions[this.modalNumber].valueBuy) * this.transactions[this.modalNumber].numberBuy;
+    this.transactions[this.modalNumber].valueDiff = (valueSell - this.transactions[this.modalNumber].valueBuy) * this.transactions[this.modalNumber].numberBuy - 20;
     console.log(this.transactions[this.modalNumber]);
     this.edit(this.transactions[this.modalNumber]);
   }
@@ -58,7 +79,9 @@ export class TransactionsComponent implements OnInit {
     this.modalNumber = index;
   }
 
-  constructor(private getTransactionsService: GetTransactionsService) { }
+  constructor(private getTransactionsService: GetTransactionsService) {
+    this.showHistory = "all";
+  }
 
   ngOnInit(): void {
     this.get();

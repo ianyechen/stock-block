@@ -50,8 +50,8 @@
                     <td scope="row">{{ transaction.dateBuy }}</td>
                     <td scope="row">{{ transaction.numberBuy }}</td>
                     <td>
-                        <button (click)="updateDataForModal(count)" type="button" class="btn btn-outline-warning" data-toggle="modal"
-                            data-target="#exampleModal">我要賣</button>
+                        <button (click)="updateDataForModal(count)" type="button" class="btn btn-outline-warning"
+                            data-toggle="modal" data-target="#exampleModal">我要賣</button>
                     </td>
                 </tr>
             </ng-container>
@@ -60,6 +60,23 @@
 </table>
 <br><br>
 
+<!-- Example single danger button -->
+<div class="btn-group">
+    <button (click)="fillStockNames()" type="button" class="btn btn-outline-primary dropdown-toggle"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        選擇股票
+    </button>
+    <div class="dropdown-menu">
+        <a (click)="editHistoryShown('all')" class="dropdown-item">全部股票</a>
+        <ng-container *ngFor="let stockName of stockNames; let count = index;">
+            <a (click)="editHistoryShown(stockName)" class="dropdown-item">{{ stockName }}</a>
+        </ng-container>
+    </div>
+</div>
+<!-- <div class="row">
+    <div class="col-md-8">.col-md-8</div>
+    <div class="col-md-4">.col-md-4</div>
+</div> -->
 <!-- <h6>所有買賣記錄</h6> -->
 <table class="table table-fixed">
     <thead class="thead-dark">
@@ -76,22 +93,43 @@
         </tr>
     </thead>
     <tbody>
-        <ng-container *ngFor="let transaction of transactions; let count = index;">
-            <ng-container *ngIf="transaction.valueSell">
-                <tr>
-                    <td scope="row">{{ transaction.name }}</td>
-                    <td scope="row">{{ transaction.valueBuy }}</td>
-                    <td scope="row">{{ transaction.dateBuy }}</td>
-                    <td scope="row">{{ transaction.numberBuy }}</td>
-                    <td scope="row">{{ transaction.valueSell }}</td>
-                    <td scope="row">{{ transaction.dateSell }}</td>
-                    <td scope="row">{{ transaction.valueDiff }}</td>
-                    <td>
-                        <button (click)="delete(count)" type="button" class="btn btn-outline-danger">刪除</button>
-                    </td>
-                </tr>
+        <ng-container *ngIf="showHistory == 'all'; then showAll else showPart"></ng-container>
+        <ng-template #showAll>
+            <ng-container *ngFor="let transaction of transactions; let count = index;">
+                <ng-container *ngIf="transaction.valueSell">
+                    <tr>
+                        <td scope="row">{{ transaction.name }}</td>
+                        <td scope="row">{{ transaction.valueBuy }}</td>
+                        <td scope="row">{{ transaction.dateBuy }}</td>
+                        <td scope="row">{{ transaction.numberBuy }}</td>
+                        <td scope="row">{{ transaction.valueSell }}</td>
+                        <td scope="row">{{ transaction.dateSell }}</td>
+                        <td scope="row" [class]="getColour(transaction.valueDiff)">{{ transaction.valueDiff }}</td>
+                        <td>
+                            <button (click)=" delete(count)" type="button" class="btn btn-outline-danger">刪除</button>
+                        </td>
+                    </tr>
+                </ng-container>
             </ng-container>
-        </ng-container>
+        </ng-template>
+        <ng-template #showPart>
+            <ng-container *ngFor="let transaction of transactions; let count = index;">
+                <ng-container *ngIf="transaction.valueSell && transaction.name == showHistory">
+                    <tr>
+                        <td scope="row">{{ transaction.name }}</td>
+                        <td scope="row">{{ transaction.valueBuy }}</td>
+                        <td scope="row">{{ transaction.dateBuy }}</td>
+                        <td scope="row">{{ transaction.numberBuy }}</td>
+                        <td scope="row">{{ transaction.valueSell }}</td>
+                        <td scope="row">{{ transaction.dateSell }}</td>
+                        <td scope="row" [class]="getColour(transaction.valueDiff)">{{ transaction.valueDiff }}</td>
+                        <td>
+                            <button (click)=" delete(count)" type="button" class="btn btn-outline-danger">刪除</button>
+                        </td>
+                    </tr>
+                </ng-container>
+            </ng-container>
+        </ng-template>
     </tbody>
 </table>
 
@@ -111,19 +149,18 @@
                 <form>
                     <div class="form-group">
                         <label for="formGroupvalueSell">賣出金額</label>
-                        <input #valueSell type="text" class="form-control" id="formGroupvalueSell"
-                            placeholder="賣出金額">
+                        <input #valueSell type="text" class="form-control" id="formGroupvalueSell" placeholder="賣出金額">
                     </div>
                     <div class="form-group">
                         <label for="formGroupdateSell">賣出日期</label>
-                        <input #dateSell type="text" class="form-control" id="formGroupdateSell"
-                            placeholder="賣出日期">
+                        <input #dateSell type="text" class="form-control" id="formGroupdateSell" placeholder="賣出日期">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">取消</button>
-                <button (click)="sell(valueSell.value, dateSell.value)" type="button" class="btn btn-outline-success" data-dismiss="modal">確定</button>
+                <button (click)="sell(valueSell.value, dateSell.value)" type="button" class="btn btn-outline-success"
+                    data-dismiss="modal">確定</button>
             </div>
         </div>
     </div>
