@@ -14,10 +14,16 @@ export class TransactionsComponent implements OnInit {
   modalNumber: number;
   stockNames: String[];
   showHistory: string;
+  totalAmountOfMoney: number;
 
   editHistoryShown(type: string) {
     this.showHistory = type;
     console.log(this.showHistory);
+    this.totalAmountOfMoney = 0;
+    for (let transaction of this.transactions) {
+      if (transaction.name == type) this.totalAmountOfMoney += transaction.valueDiff;
+      else if (type == 'all') this.totalAmountOfMoney += transaction.valueDiff;
+    }
   }
 
   fillStockNames() {
@@ -48,6 +54,10 @@ export class TransactionsComponent implements OnInit {
     this.getTransactionsService.getTransaction().subscribe(data => {
       console.log(data);
       this.transactions = data.item.array;
+      this.totalAmountOfMoney = 0;
+      for (let transaction of this.transactions) {
+        this.totalAmountOfMoney += transaction.valueDiff;
+      }
     })
   }
 
@@ -64,6 +74,8 @@ export class TransactionsComponent implements OnInit {
     this.transactions[this.modalNumber].valueDiff = (valueSell - this.transactions[this.modalNumber].valueBuy) * this.transactions[this.modalNumber].numberBuy - 20;
     console.log(this.transactions[this.modalNumber]);
     this.edit(this.transactions[this.modalNumber]);
+    (<HTMLInputElement>document.getElementById('formGroupvalueSell')).value = '';
+    (<HTMLInputElement>document.getElementById('formGroupdateSell')).value = '';
   }
 
   delete(index: number) {
@@ -81,6 +93,7 @@ export class TransactionsComponent implements OnInit {
 
   constructor(private getTransactionsService: GetTransactionsService) {
     this.showHistory = "all";
+    this.totalAmountOfMoney = 0;
   }
 
   ngOnInit(): void {
