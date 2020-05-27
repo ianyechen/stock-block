@@ -1,0 +1,116 @@
+
+<table class="table  table-fixed">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">股票名稱</th>
+            <th scope="col">Tesla</th>
+            <th scope="col">Shopify (USD)</th>
+            <th scope="col">Shopify (CAD)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">目前股價</th>
+            <ng-container *ngIf="stocks && stocks.length; then dCur else hCur"></ng-container>
+            <ng-template #dCur>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.closeValue }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hCur>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">買入金額</th>
+            <ng-container *ngFor="let index of editing; let count = index;">
+                <ng-container *ngIf="editing[count]; then yesEdit else noEdit"></ng-container>
+                <ng-template #yesEdit>
+                    <td>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input #inputBox type="text" class="col-xs-2">
+                            <button (click)="save(count, inputBox.value)" type="button"
+                                class="btn btn-secondary btn-sm">儲存</button>
+                        </div>
+                    </td>
+                </ng-template>
+                <ng-template #noEdit>
+                    <ng-container *ngIf="valueOfBought">
+                        <td>{{ valueOfBought[count].item.stockValue }}&nbsp;&nbsp; <button (click)="edit(count)"
+                                type="button" class="btn btn-secondary btn-sm">更改</button></td>
+                    </ng-container>
+                </ng-template>
+            </ng-container>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">賺/賠金額</th>
+            <ng-container *ngIf="valueOfBought && stocks && stocks.length; then dnetValue else hnetValue">
+            </ng-container>
+            <ng-template #dnetValue>
+                <ng-container *ngFor="let index of makeArray(3); let count = index;">
+                    <td
+                        [class]="getColour((+(stocks[count].closeValue - valueOfBought[count].item.stockValue)).toFixed(2))">
+                        {{ (+(stocks[count].closeValue - valueOfBought[count].item.stockValue)).toFixed(2) }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hnetValue>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">開盤指數</th>
+            <ng-container *ngIf="stocks && stocks.length; then dOpen else hOpen"></ng-container>
+            <ng-template #dOpen>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.openValue }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hOpen>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">昨收指數</th>
+            <ng-container *ngIf="stocks && stocks.length; then dPrevClose else hPrevClose"></ng-container>
+            <ng-template #dPrevClose>
+                <ng-container *ngFor="let stock of stocks">
+                    <td>{{ stock.prevCloseValue }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hPrevClose>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
+        </tr>
+        <br>
+        <tr>
+            <th scope="row">漲/跌金額</th>
+            <ng-container *ngIf="stocks && stocks.length; then dValueDiff else hValueDiff"></ng-container>
+            <ng-template #dValueDiff>
+                <ng-container *ngFor="let stock of stocks">
+                    <td [class]="getColour(stock.valueDiff)">
+                        {{ stock.valueDiff }}</td>
+                </ng-container>
+            </ng-template>
+            <ng-template #hValueDiff>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <td></td>
+                </ng-container>
+            </ng-template>
+        </tr>
+    </tbody>
+</table>

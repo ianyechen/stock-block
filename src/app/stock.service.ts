@@ -1,3 +1,4 @@
+// this service gets the current stock information from AlphaVantage 
 import { Injectable } from '@angular/core';
 import { StockObject } from './stock';
 
@@ -16,8 +17,6 @@ export class StockService {
     let name: string, openValue: number, closeValue: number, prevCloseValue: number;
     let stocks = [];
     let nameOfStock = ["tsla", "shop", "shop.trt"];
-    let stringOfProperty: string;
-    let stocksClosed = false;
     let countInner = 0;
 
     for (let count = 0; count < nameOfStock.length; count++) {
@@ -27,10 +26,10 @@ export class StockService {
         .then(res => res.json())
         .then(data => {
 
-          console.log(data["Meta Data"]["2. Symbol"]);
-          name = data["Meta Data"]["2. Symbol"];
           console.log(data);
+          name = data["Meta Data"]["2. Symbol"];
 
+          // getting the latest day and second latest day 
           for (let property in data["Time Series (Daily)"]) {
 
             if (countInner == 0) {

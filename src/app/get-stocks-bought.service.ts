@@ -11,7 +11,6 @@ let url = "http://localhost:4000/";
 })
 export class GetStocksBoughtService {
 
-  
   saveStock(stock, idValue) {
     let link = url + 'stocks/' + idValue;
     return this.http.put(link, stock).pipe(map((response: any) => {
@@ -28,4 +27,5 @@ export class GetStocksBoughtService {
   }
 
   constructor(private http: HttpClient) { }
+  
 }

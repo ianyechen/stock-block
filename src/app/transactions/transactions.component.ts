@@ -11,28 +11,37 @@ export class TransactionsComponent implements OnInit {
 
   // holds all of the transactions 
   transactions: TransactionObject[];
+  // holds the number for modal pop up and edit 
   modalNumber: number;
+  // holds all the stock names for selecting which one to display 
   stockNames: String[];
+  // holds the string name for the stock which is displaying 
   showHistory: string;
+  // holds the total amount of money being displayed 
   totalAmountOfMoney: number;
 
+  // changing the showHistory variable 
   editHistoryShown(type: string) {
+
     this.showHistory = type;
-    console.log(this.showHistory);
     this.totalAmountOfMoney = 0;
+
     for (let transaction of this.transactions) {
       if (transaction.name == type) this.totalAmountOfMoney += transaction.valueDiff;
       else if (type == 'all') this.totalAmountOfMoney += transaction.valueDiff;
     }
+
   }
 
   fillStockNames() {
+    
     this.stockNames = [];
     for (let transaction of this.transactions) {
       if (!this.stockNames.includes(transaction.name) && transaction.valueSell != null) {
         this.stockNames.push(transaction.name);
       }
     }
+
   }
 
   // changes colour depending if it's a pos or neg number 
@@ -61,6 +70,7 @@ export class TransactionsComponent implements OnInit {
     })
   }
 
+  // editing the transactions (for selling)
   edit(transactionObject: TransactionObject) {
     this.getTransactionsService.editTransaction(transactionObject, this.modalNumber).subscribe(data => {
       console.log(data);
@@ -68,6 +78,7 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
+  // selling the stock 
   sell(valueSell: number, dateSell: string) {
     this.transactions[this.modalNumber].valueSell = valueSell;
     this.transactions[this.modalNumber].dateSell = dateSell;
