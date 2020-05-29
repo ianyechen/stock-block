@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-register',
@@ -20,10 +21,15 @@ export class RegisterComponent implements OnInit {
       this.registerForm.controls.password.value != this.registerForm.controls.confirmPassword.value) {
       console.log('Invalid Form');
     }
-    else console.log(JSON.stringify(this.registerForm.value));
+    else {
+      console.log(JSON.stringify(this.registerForm.value));
+      this._userService.register(JSON.stringify(this.registerForm.value)).subscribe(data => {
+        console.log(data);
+      })
+    }
   }
 
-  constructor() { }
+  constructor(private _userService: UserService) { }
 
   ngOnInit(): void {
   }
