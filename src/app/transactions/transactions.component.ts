@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TransactionObject } from '../transaction';
 import { GetTransactionsService } from '../get-transactions.service';
+import { UserService } from '../user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transactions',
@@ -20,6 +22,8 @@ export class TransactionsComponent implements OnInit {
   // holds the total amount of money being displayed 
   totalAmountOfMoney: number;
 
+  loggedIn: boolean;
+
   // changing the showHistory variable 
   editHistoryShown(type: string) {
 
@@ -34,7 +38,7 @@ export class TransactionsComponent implements OnInit {
   }
 
   fillStockNames() {
-    
+
     this.stockNames = [];
     for (let transaction of this.transactions) {
       if (!this.stockNames.includes(transaction.name) && transaction.valueSell != null) {
@@ -102,7 +106,15 @@ export class TransactionsComponent implements OnInit {
     this.modalNumber = index;
   }
 
-  constructor(private getTransactionsService: GetTransactionsService) {
+  constructor(private getTransactionsService: GetTransactionsService, private user: UserService, private router: Router) {
+    this.user.user().subscribe(
+      data => {
+        console.log(data);
+        this.user.loggedIn = true;
+        this.loggedIn = this.user.loggedIn;
+      },
+      error => this.router.navigate(['/login'])
+    )
     this.showHistory = "all";
     this.totalAmountOfMoney = 0;
   }

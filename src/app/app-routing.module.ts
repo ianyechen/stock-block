@@ -5,6 +5,7 @@ import { StocksComponent } from './stocks/stocks.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/stocks', pathMatch: 'full' },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'transactions', component: TransactionsComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
 ]
 
 
