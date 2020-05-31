@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UserService } from '../user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +16,18 @@ export class LoginComponent implements OnInit {
   });
 
   login() {
-    if (this.loginForm.valid) console.log(JSON.stringify(this.loginForm.value));
+    if (this.loginForm.valid) {
+      this._user.login(JSON.stringify(this.loginForm.value)).subscribe(data => {
+        console.log(data);
+        console.log("LOGGED IN");
+        this._router.navigate(['/transactions']);
+      })
+      console.log(JSON.stringify(this.loginForm.value));
+    }
     else console.log('Invalid');
   }
 
-  constructor() { }
+  constructor(private _user: UserService, private _router: Router) { }
 
   ngOnInit(): void {
   }
