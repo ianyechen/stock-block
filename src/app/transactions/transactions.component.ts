@@ -66,7 +66,8 @@ export class TransactionsComponent implements OnInit {
   get() {
     this.getTransactionsService.getTransaction().subscribe(data => {
       console.log(data);
-      this.transactions = data.item.array;
+      // this.transactions = data.item.array;
+      this.transactions = data.transactions;
       this.totalAmountOfMoney = 0;
       for (let transaction of this.transactions) {
         this.totalAmountOfMoney += transaction.valueDiff;
@@ -84,9 +85,10 @@ export class TransactionsComponent implements OnInit {
 
   // selling the stock 
   sell(valueSell: number, dateSell: string) {
-    this.transactions[this.modalNumber].valueSell = valueSell;
+    console.log(this.transactions[this.modalNumber]);
+    this.transactions[this.modalNumber].valueSell = +valueSell;
     this.transactions[this.modalNumber].dateSell = dateSell;
-    this.transactions[this.modalNumber].valueDiff = (valueSell - this.transactions[this.modalNumber].valueBuy) * this.transactions[this.modalNumber].numberBuy - 20;
+    this.transactions[this.modalNumber].valueDiff = (+valueSell - this.transactions[this.modalNumber].valueBuy) * this.transactions[this.modalNumber].numberBuy - 20;
     console.log(this.transactions[this.modalNumber]);
     this.edit(this.transactions[this.modalNumber]);
     (<HTMLInputElement>document.getElementById('formGroupvalueSell')).value = '';
