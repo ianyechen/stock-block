@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this._user.login(JSON.stringify(this.loginForm.value)).subscribe(data => {
         console.log(data);
+        this._user.changeLoggedIn(true);
         this._router.navigate(['/transactions']);
       })
       console.log(JSON.stringify(this.loginForm.value));

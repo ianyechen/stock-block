@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
-  constructor(private http: HttpClient) { }
-
-  loggedIn: boolean = false; 
   
+  event = new BehaviorSubject(false);
+  currentMessage = this.event.asObservable();
+
+  constructor(private http: HttpClient) { 
+    this.loggedIn = false;
+  }
+
+  loggedIn: boolean; 
+  
+  changeLoggedIn(message: boolean) {
+    this.event.next(message);
+  }
+
   register(body: any) {
     return this.http.post('http://127.0.0.1:3000/users/register', body, {
       observe: 'body',

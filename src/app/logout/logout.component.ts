@@ -13,7 +13,9 @@ export class LogoutComponent implements OnInit {
     this.user.logout().subscribe(
       data => {
         console.log(data);
-        this.user.loggedIn = false;
+        // this.user.loggedIn = false;
+        this.user.changeLoggedIn(false);
+
         this.router.navigate(['/login']);
       },
       error => {

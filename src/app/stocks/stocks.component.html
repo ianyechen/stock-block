@@ -1,11 +1,27 @@
-
 <table class="table  table-fixed">
     <thead class="thead-dark">
         <tr>
             <th scope="col">股票名稱</th>
-            <th scope="col">Tesla</th>
-            <th scope="col">Shopify (USD)</th>
-            <th scope="col">Shopify (CAD)</th>
+            <ng-container *ngIf="stocks && stocks.length"></ng-container>
+            <ng-template #dName>
+                <ng-container *ngFor="let stock of stocks">
+                    <th></th>
+                </ng-container>
+            </ng-template>
+            <!-- <ng-template #hName>
+                <ng-container *ngFor="let number of [0, 1, 2]">
+                    <th></th>
+                </ng-container>
+            </ng-template> -->
+            <th>
+                <!-- <button type="button" class="btn btn-secondary btn-sm">新增</button> -->
+                <form class="form-inline my-2 my-lg-0" style="float:right;">
+                    <input #stockName class="form-control mr-sm-2" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <button (click)="addNewStock(stockName.value)" class="btn btn-outline-light my-2 my-sm-0"
+                        type="submit">新增</button>
+                </form>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -18,12 +34,12 @@
                 </ng-container>
             </ng-template>
             <ng-template #hCur>
-                <ng-container *ngFor="let number of [0, 1, 2]">
+                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
                     <td></td>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </tr>
-        <br>
+        <!-- <br>
         <tr>
             <th scope="row">買入金額</th>
             <ng-container *ngFor="let index of editing; let count = index;">
@@ -47,7 +63,7 @@
                     </ng-container>
                 </ng-template>
             </ng-container>
-        </tr>
+        </tr> -->
         <br>
         <tr>
             <th scope="row">賺/賠金額</th>
@@ -61,9 +77,9 @@
                 </ng-container>
             </ng-template>
             <ng-template #hnetValue>
-                <ng-container *ngFor="let number of [0, 1, 2]">
+                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
                     <td></td>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </tr>
         <br>
@@ -76,9 +92,9 @@
                 </ng-container>
             </ng-template>
             <ng-template #hOpen>
-                <ng-container *ngFor="let number of [0, 1, 2]">
+                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
                     <td></td>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </tr>
         <br>
@@ -91,9 +107,9 @@
                 </ng-container>
             </ng-template>
             <ng-template #hPrevClose>
-                <ng-container *ngFor="let number of [0, 1, 2]">
+                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
                     <td></td>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </tr>
         <br>
@@ -107,9 +123,9 @@
                 </ng-container>
             </ng-template>
             <ng-template #hValueDiff>
-                <ng-container *ngFor="let number of [0, 1, 2]">
+                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
                     <td></td>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </tr>
     </tbody>

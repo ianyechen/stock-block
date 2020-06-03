@@ -9,8 +9,16 @@ import { UserService } from '../user.service';
 })
 export class NavigationBarComponent implements OnInit {
 
-  constructor(private user: UserService, private router: Router) { }
+  loggedIn: boolean;
 
+  constructor(private user: UserService, private router: Router) {
+    this.updateLoggedIn();
+  }
+
+  updateLoggedIn() {
+    console.log("changed value");
+    this.loggedIn = this.user.loggedIn;
+  }
   // logout() {
   //   this.user.logout().subscribe(
   //     data => {
@@ -22,6 +30,9 @@ export class NavigationBarComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+    this.user.currentMessage.subscribe(data => {
+      this.loggedIn = data;
+    })
   }
 
 }

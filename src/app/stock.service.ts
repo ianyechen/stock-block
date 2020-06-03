@@ -16,12 +16,12 @@ export class StockService {
 
     let name: string, openValue: number, closeValue: number, prevCloseValue: number;
     let stocks = [];
-    let nameOfStock = ["tsla", "shop", "shop.trt"];
+    let nameOfStock = [];
     let countInner = 0;
 
     for (let count = 0; count < nameOfStock.length; count++) {
 
-      let link = 'ttps://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key}`;
+      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key}`;
       fetch(link)
         .then(res => res.json())
         .then(data => {

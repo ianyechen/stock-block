@@ -18,6 +18,13 @@ export class StocksComponent implements OnInit {
   // holds all of the personal stock values 
   valueOfBought: any[];
 
+  addNewStock(stockName: string) {
+    // this.stockService
+    this.getStockBoughtService.saveStock(stockName).subscribe(data => {
+      console.log(data);
+    });
+  }
+
   // changes colour depending if it's a pos or neg number 
   getColour(value: string) {
     if (+value >= 0) return "text-success";
@@ -36,14 +43,14 @@ export class StocksComponent implements OnInit {
     console.log("saving " + value + " into " + index);
     this.editing[index] = false;
 
-    this.getStockBoughtService.saveStock({
-      stockName: "test",
-      stockNumber: 2,
-      stockValue: (+value).toFixed(2)
-    }, index).subscribe(data => {
-      console.log(data);
-      this.valueOfBought = data;
-    })
+    // this.getStockBoughtService.saveStock({
+    //   stockName: "test",
+    //   stockNumber: 2,
+    //   stockValue: (+value).toFixed(2)
+    // }, index).subscribe(data => {
+    //   console.log(data);
+    //   this.valueOfBought = data;
+    // })
 
   }
 
