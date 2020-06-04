@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { StockObject } from './stock';
 
 import fetch from 'node-fetch';
+import { GetStocksBoughtService } from './get-stocks-bought.service';
 
 // const key = require('../key.json').key;
 const key = process.env.KEY;
@@ -12,16 +13,17 @@ const key = process.env.KEY;
 })
 export class StockService {
 
+  nameOfStock = [];
+
   async getStocks(): Promise<StockObject[]> {
 
     let name: string, openValue: number, closeValue: number, prevCloseValue: number;
     let stocks = [];
-    let nameOfStock = [];
     let countInner = 0;
+    console.log("in getStocks()");
+    for (let count = 0; count < this.nameOfStock.length; count++) {
 
-    for (let count = 0; count < nameOfStock.length; count++) {
-
-      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + nameOfStock[count] + `&apikey=${key}`;
+      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + this.nameOfStock[count].symbol + `&apikey=${key}`;
       fetch(link)
         .then(res => res.json())
         .then(data => {
@@ -56,8 +58,13 @@ export class StockService {
           }
 
           let indexOf: number;
-          
-          indexOf = nameOfStock.indexOf(name);
+          console.log(this.nameOfStock);
+          indexOf = this.nameOfStock.findIndex(obj => {
+            console.log(obj);
+            console.log(name);
+            return obj.symbol == name;
+          });
+          console.log(indexOf);
           stocks[indexOf] = stockObject;
 
         });
@@ -69,6 +76,12 @@ export class StockService {
 
   }
 
-  constructor() { }
+  constructor(private stocks: GetStocksBoughtService) {
+    this.stocks.getStockBought().subscribe(data => {
+      console.log(data);
+      this.nameOfStock = data;
+      console.log("got dats");
+    });
+  }
 
 }

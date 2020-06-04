@@ -22,6 +22,7 @@ export class StocksComponent implements OnInit {
     // this.stockService
     this.getStockBoughtService.saveStock(stockName).subscribe(data => {
       console.log(data);
+      this.getStocks();
     });
   }
 
@@ -81,6 +82,7 @@ export class StocksComponent implements OnInit {
     this.getStockBoughtService.getStockBought().subscribe(data => {
       this.valueOfBought = data;
       console.log(this.valueOfBought);
+      this.getStocks();
     });
 
   }
