@@ -21,6 +21,9 @@ export class StockService {
     let stocks = [];
     let countInner = 0;
     console.log("in getStocks()");
+    this.nameOfStock = this.stocks.nameOfStock;
+    console.log(this.nameOfStock);
+    
     for (let count = 0; count < this.nameOfStock.length; count++) {
 
       let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + this.nameOfStock[count].symbol + `&apikey=${key}`;
@@ -51,12 +54,14 @@ export class StockService {
 
           let stockObject = {
             name: name,
+            symbol: name,
             openValue: (openValue).toFixed(2),
             closeValue: (closeValue).toFixed(2),
             valueDiff: (closeValue - openValue).toFixed(2),
-            prevCloseValue: (prevCloseValue).toFixed(2)
+            currentValue: (prevCloseValue).toFixed(2)
           }
 
+          console.log(stockObject);
           let indexOf: number;
           console.log(this.nameOfStock);
           indexOf = this.nameOfStock.findIndex(obj => {
@@ -77,11 +82,12 @@ export class StockService {
   }
 
   constructor(private stocks: GetStocksBoughtService) {
-    this.stocks.getStockBought().subscribe(data => {
-      console.log(data);
-      this.nameOfStock = data;
-      console.log("got dats");
-    });
+    // this.stocks.getStockBought().subscribe(data => {
+    //   console.log(data);
+    //   this.nameOfStock = data;
+    //   console.log("got dats");
+    // });
+  
   }
 
 }

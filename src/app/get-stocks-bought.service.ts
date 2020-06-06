@@ -11,6 +11,8 @@ let url = "http://localhost:4000/";
 })
 export class GetStocksBoughtService {
 
+  nameOfStock: any;
+
   saveStock(stockName: string) {
     // let link = url + 'stocks/' + idValue;
     // return this.http.put(link, stock).pipe(map((response: any) => {
@@ -39,7 +41,11 @@ export class GetStocksBoughtService {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
-    });
+    }).pipe(map(data => {
+      console.log(data);
+      this.nameOfStock = data;
+      return data;
+    }));
     // return this.http.get(url + 'stocks/all').pipe(map((response: any) => {
     //   console.log(response);
     //   return response;

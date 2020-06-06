@@ -3,11 +3,11 @@
         <tr>
             <th scope="col">股票名稱</th>
             <ng-container *ngIf="stocks && stocks.length"></ng-container>
-            <ng-template #dName>
+            <!-- <ng-template #dName> -->
                 <ng-container *ngFor="let stock of stocks">
-                    <th></th>
+                    <th>{{ stock.name }}</th>
                 </ng-container>
-            </ng-template>
+            <!-- </ng-template> -->
             <!-- <ng-template #hName>
                 <ng-container *ngFor="let number of [0, 1, 2]">
                     <th></th>
@@ -30,7 +30,7 @@
             <ng-container *ngIf="stocks && stocks.length; then dCur else hCur"></ng-container>
             <ng-template #dCur>
                 <ng-container *ngFor="let stock of stocks">
-                    <td>{{ stock.closeValue }}</td>
+                    <td>{{ stock.currentValue }}</td>
                 </ng-container>
             </ng-template>
             <ng-template #hCur>
@@ -65,7 +65,7 @@
             </ng-container>
         </tr> -->
         <br>
-        <tr>
+        <!-- <tr>
             <th scope="row">賺/賠金額</th>
             <ng-container *ngIf="valueOfBought && stocks && stocks.length; then dnetValue else hnetValue">
             </ng-container>
@@ -77,12 +77,12 @@
                 </ng-container>
             </ng-template>
             <ng-template #hnetValue>
-                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
+                <ng-container *ngFor="let number of [0, 1, 2]">
                     <td></td>
-                </ng-container> -->
+                </ng-container>
             </ng-template>
         </tr>
-        <br>
+        <br> -->
         <tr>
             <th scope="row">開盤指數</th>
             <ng-container *ngIf="stocks && stocks.length; then dOpen else hOpen"></ng-container>
@@ -103,7 +103,7 @@
             <ng-container *ngIf="stocks && stocks.length; then dPrevClose else hPrevClose"></ng-container>
             <ng-template #dPrevClose>
                 <ng-container *ngFor="let stock of stocks">
-                    <td>{{ stock.prevCloseValue }}</td>
+                    <td>{{ stock.closeValue }}</td>
                 </ng-container>
             </ng-template>
             <ng-template #hPrevClose>

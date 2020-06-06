@@ -22,7 +22,7 @@ export class StocksComponent implements OnInit {
     // this.stockService
     this.getStockBoughtService.saveStock(stockName).subscribe(data => {
       console.log(data);
-      this.getStocks();
+      this.getStocksBought();
     });
   }
 
@@ -67,6 +67,8 @@ export class StocksComponent implements OnInit {
     try {
       stockObject = this.stockService.getStocks();
       await stockObject;
+      console.log(stockObject);
+
       this.stocks = [];
       this.stocks = stockObject["__zone_symbol__value"];
       console.log(this.stocks);
@@ -91,7 +93,7 @@ export class StocksComponent implements OnInit {
     private getStockBoughtService: GetStocksBoughtService) { }
 
   ngOnInit(): void {
-    this.getStocks();
+    // this.getStocks();
     this.getStocksBought();
   }
 
