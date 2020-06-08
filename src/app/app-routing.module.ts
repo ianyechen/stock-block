@@ -8,7 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/stocks', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'stocks', component: StocksComponent },
   { path: 'transactions', component: TransactionsComponent },
   { path: 'register', component: RegisterComponent },

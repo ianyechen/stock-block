@@ -4,6 +4,9 @@ import { StockObject } from './stock';
 
 import fetch from 'node-fetch';
 import { GetStocksBoughtService } from './get-stocks-bought.service';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // const key = require('../key.json').key;
 const key = process.env.KEY;
@@ -14,17 +17,30 @@ const key = process.env.KEY;
 export class StockService {
 
   nameOfStock = [];
+  lastTimeUsedAPI: any;
+  stocksObjects: any;
 
-  async getStocks(): Promise<StockObject[]> {
+  getStocks(): Observable<any[]> {
 
     let name: string, openValue: number, closeValue: number, prevCloseValue: number;
-    let stocks = [];
     let countInner = 0;
     console.log("in getStocks()");
     this.nameOfStock = this.stocks.nameOfStock;
     console.log(this.nameOfStock);
-    
+
+    // let newTime = Date.now();
+    // console.log(this.lastTimeUsedAPI);
+    // console.log(newTime);
+    // if (newTime - this.lastTimeUsedAPI <= 1000*60) {
+    //   console.log("too soon");
+    //   return of(this.nameOfStock);
+    // }
+    // this.lastTimeUsedAPI = newTime;
+
+    // let stocks = [];
+
     for (let count = 0; count < this.nameOfStock.length; count++) {
+      // for (let count = 0; count < 1; count++) {
 
       let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + this.nameOfStock[count].symbol + `&apikey=${key}`;
       fetch(link)
@@ -53,7 +69,7 @@ export class StockService {
           }
 
           let stockObject = {
-            name: name,
+            name: (this.nameOfStock[count].name) ? this.nameOfStock[count].name : name,
             symbol: name,
             openValue: (openValue).toFixed(2),
             closeValue: (closeValue).toFixed(2),
@@ -70,24 +86,34 @@ export class StockService {
             return obj.symbol == name;
           });
           console.log(indexOf);
-          stocks[indexOf] = stockObject;
-
+          this.stocksObjects[indexOf] = stockObject;
+          this.http.put('http://127.0.0.1:3000/stocks/updateValues/' + indexOf, stockObject, {
+            observe: 'body',
+            withCredentials: true,
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+          }).subscribe(data2 => {
+            console.log(data2);
+          });
         });
 
     }
 
-    console.log(stocks);
-    return stocks;
+    if (this.nameOfStock.length) {
+      console.log(this.stocksObjects);
+      return of(this.stocksObjects);
+    }
+    else return of([]);
 
   }
 
-  constructor(private stocks: GetStocksBoughtService) {
+  constructor(private stocks: GetStocksBoughtService, private http: HttpClient) {
     // this.stocks.getStockBought().subscribe(data => {
     //   console.log(data);
     //   this.nameOfStock = data;
     //   console.log("got dats");
     // });
-  
+    this.stocksObjects = [];
+
   }
 
 }

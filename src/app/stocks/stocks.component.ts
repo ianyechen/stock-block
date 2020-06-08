@@ -3,6 +3,7 @@ import { StockService } from '../stock.service';
 import { StockObject } from '../stock';
 import { StockBoughtObject } from '../boughtStocks';
 import { GetStocksBoughtService } from '../get-stocks-bought.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-stocks',
@@ -22,7 +23,12 @@ export class StocksComponent implements OnInit {
     // this.stockService
     this.getStockBoughtService.saveStock(stockName).subscribe(data => {
       console.log(data);
-      this.getStocksBought();
+
+      this.getStockBoughtService.getStockBought().subscribe(data => {
+        this.stocks = data;
+        console.log(this.valueOfBought);
+        this.apiCall();
+      });
     });
   }
 
@@ -38,12 +44,25 @@ export class StocksComponent implements OnInit {
     this.editing[index] = true;
   }
 
+  delete(index: number) {
+    console.log("deleting" + index);
+    this.getStockBoughtService.deleteStock(index).subscribe(data => {
+      console.log(data);
+      this.getStocksBought();
+
+    })
+  }
+
   // saving the personal stock values into db
-  save(index: string, value: number) {
+  save(index: number, value: string) {
 
     console.log("saving " + value + " into " + index);
     this.editing[index] = false;
+    this.getStockBoughtService.editStock(value, index).subscribe(data => {
+      console.log(data);
+      this.getStocksBought();
 
+    });
     // this.getStockBoughtService.saveStock({
     //   stockName: "test",
     //   stockNumber: 2,
@@ -60,37 +79,64 @@ export class StocksComponent implements OnInit {
   }
 
   // getting stocks from API call 
-  async getStocks() {
+  getStocks() {
 
     let stockObject;
+    console.log("hio");
+    // try {
+    this.stockService.getStocks().subscribe(data => {
+      console.log(data);
+      // this.stocks = [];
+      this.stocks = data;
+      // this.stockService.stocksObjects = [];
+      // this.http.put('http://127.0.0.1:3000/stocks/updateValues', data, {
+      //   observe: 'body',
+      //   withCredentials: true,
+      //   headers: new HttpHeaders().append('Content-Type', 'application/json')
+      // }).subscribe(data2 => {
+      //   console.log(data2);
+      // });
+    });
 
-    try {
-      stockObject = this.stockService.getStocks();
-      await stockObject;
-      console.log(stockObject);
+    // console.log(stockObject);
 
-      this.stocks = [];
-      this.stocks = stockObject["__zone_symbol__value"];
-      console.log(this.stocks);
-    } catch (error) {
-      console.log(error);
-    }
+    // this.stocks = [];
+    // this.stocks = stockObject["__zone_symbol__value"];
+    // console.log(this.stocks);
+    // this.http.put('http://127.0.0.1:3000/stocks/updateValues', this.stocks, {
+    //   observe: 'body',
+    //   withCredentials: true,
+    //   headers: new HttpHeaders().append('Content-Type', 'application/json')
+    // }).subscribe(data => {
+    //   console.log(data);
+    // });
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
+  }
+
+  apiCall() {
+    this.getStockBoughtService.getStockBought().subscribe(data => {
+
+      this.getStocks();
+    });
   }
 
   // getting personal stocks values 
   getStocksBought() {
 
     this.getStockBoughtService.getStockBought().subscribe(data => {
-      this.valueOfBought = data;
+      this.stocks = data;
       console.log(this.valueOfBought);
-      this.getStocks();
+      // this.getStocks();
     });
 
   }
 
   constructor(private stockService: StockService,
-    private getStockBoughtService: GetStocksBoughtService) { }
+    private getStockBoughtService: GetStocksBoughtService,
+    private http: HttpClient) { }
 
   ngOnInit(): void {
     // this.getStocks();

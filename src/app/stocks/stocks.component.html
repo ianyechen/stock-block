@@ -2,11 +2,47 @@
     <thead class="thead-dark">
         <tr>
             <th scope="col">股票名稱</th>
-            <ng-container *ngIf="stocks && stocks.length"></ng-container>
-            <!-- <ng-template #dName> -->
-                <ng-container *ngFor="let stock of stocks">
-                    <th>{{ stock.name }}</th>
+            <ng-container *ngIf="stocks && stocks.length">
+                <ng-container *ngFor="let stock of stocks; let count = index;">
+                    <ng-container *ngIf="editing[count]; then yesEdit else noEdit"></ng-container>
+                    <ng-template #yesEdit>
+                        <th>
+                            <!-- <div class="input-group mb-3"> -->
+                            <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"></span>
+                                </div> -->
+                            <input #inputBox type="text" placeholder="Name" class="col-md-4">
+                            <button (click)="save(count, inputBox.value)" type="button"
+                                class="btn btn-secondary btn-sm">儲存</button>
+                            <!-- </div> -->
+                        </th>
+                    </ng-template>
+                    <ng-template #noEdit>
+                        <!-- <ng-container *ngIf="valueOfBought"> -->
+                        <th> {{ stock.name }} &nbsp;&nbsp;
+                            <!-- <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">更改</button> -->
+                            <div class="btn-group">
+                                <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">更改</button>
+                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button (click)="delete(count)" type="button"
+                                        class="dropdown-item btn btn-secondary btn-sm">刪除</button>
+                                </div>
+                            </div>
+                        </th>
+                        <!-- </ng-container> -->
+                    </ng-template>
                 </ng-container>
+                <!-- <ng-container *ngFor="let index of editing; let count = index;"> -->
+
+                <!-- </ng-container> -->
+            </ng-container>
+            <!-- <ng-template #dName> -->
+
+
             <!-- </ng-template> -->
             <!-- <ng-template #hName>
                 <ng-container *ngFor="let number of [0, 1, 2]">
@@ -16,10 +52,13 @@
             <th>
                 <!-- <button type="button" class="btn btn-secondary btn-sm">新增</button> -->
                 <form class="form-inline my-2 my-lg-0" style="float:right;">
+                    <button (click)="apiCall()" class="btn btn-primary my-2 my-sm-0" type="reset">更新</button>
+                    &nbsp;&nbsp;
                     <input #stockName class="form-control mr-sm-2" type="search" placeholder="Search"
                         aria-label="Search">
                     <button (click)="addNewStock(stockName.value)" class="btn btn-outline-light my-2 my-sm-0"
-                        type="submit">新增</button>
+                        type="reset">新增</button>
+
                 </form>
             </th>
         </tr>

@@ -36,6 +36,28 @@ export class GetStocksBoughtService {
     });
   }
 
+  deleteStock(index: number): Observable<any> {
+    return this.http.delete('http://127.0.0.1:3000/stocks/delete/' + index, {
+      observe: 'body',
+      withCredentials: true,
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    });
+  }
+
+  editStock(value: string, index): Observable<any> {
+    console.log(value);
+    console.log(index);
+    //why cant i pass strings for put 
+    let temp = {
+      stockName: value
+    }
+    return this.http.put('http://127.0.0.1:3000/stocks/edit/' + index, temp, {
+      observe: 'body',
+      withCredentials: true,
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    });
+  }
+
   getStockBought(): Observable<any> {
     return this.http.get('http://127.0.0.1:3000/stocks/getAll', {
       observe: 'body',
