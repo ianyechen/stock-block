@@ -5,8 +5,9 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { TransactionObject } from './transaction';
 
-const link = "http://localhost:4000";
-// const link = 'https://manage-my-stocks-database.herokuapp.com;
+// const link = "http://localhost:4000";
+// const link = 'https://manage-my-stocks-database.herokuapp.com';
+const link = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class GetTransactionsService {
       dateSell: null,
       valueDiff: null,
     }
-    return this.http.post('http://127.0.0.1:3000/transactions/add', transaction, {
+    return this.http.post(link + '/transactions/add', transaction, {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -43,7 +44,7 @@ export class GetTransactionsService {
     //   console.log(response);
     //   return response;
     // }));
-    return this.http.get('http://127.0.0.1:3000/transactions/getAll', {
+    return this.http.get(link + '/transactions/getAll', {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -61,7 +62,7 @@ export class GetTransactionsService {
     //   return response;
     // }));
     console.log(transactionObject);
-    return this.http.put('http://127.0.0.1:3000/transactions/edit/' + indexNumber, transactionObject, {
+    return this.http.put(link + '/transactions/edit/' + indexNumber, transactionObject, {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -74,7 +75,7 @@ export class GetTransactionsService {
     //   console.log(response);
     //   return response;
     // }));
-    return this.http.delete('http://127.0.0.1:3000/transactions/delete/' + indexNumber, {
+    return this.http.delete(link + '/transactions/delete/' + indexNumber, {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')

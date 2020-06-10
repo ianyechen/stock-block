@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // let url = "https://manage-my-stocks-database.herokuapp.com/";
-let url = "http://localhost:4000/";
+// let url = "http://localhost:4000/";
+// const link = 'https://manage-my-stocks-database.herokuapp.com';
+const link = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,7 @@ export class GetStocksBoughtService {
       valueDiff: null,
     };
 
-    return this.http.post('http://127.0.0.1:3000/stocks/save', stock, {
+    return this.http.post(link + '/stocks/save', stock, {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -37,7 +39,7 @@ export class GetStocksBoughtService {
   }
 
   deleteStock(index: number): Observable<any> {
-    return this.http.delete('http://127.0.0.1:3000/stocks/delete/' + index, {
+    return this.http.delete(link + '/stocks/delete/' + index, {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -51,7 +53,7 @@ export class GetStocksBoughtService {
     let temp = {
       stockName: value
     }
-    return this.http.put('http://127.0.0.1:3000/stocks/edit/' + index, temp, {
+    return this.http.put(link + '/stocks/edit/' + index, temp, {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -59,7 +61,7 @@ export class GetStocksBoughtService {
   }
 
   getStockBought(): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/stocks/getAll', {
+    return this.http.get(link + '/stocks/getAll', {
       observe: 'body',
       withCredentials: true,
       headers: new HttpHeaders().append('Content-Type', 'application/json')

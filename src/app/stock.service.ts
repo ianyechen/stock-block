@@ -8,8 +8,10 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-// const key = require('../key.json').key;
-const key = process.env.KEY;
+const key = require('../../key.json').key;
+// const key = process.env.KEY;
+// const link = 'https://manage-my-stocks-database.herokuapp.com';
+const url = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
@@ -28,14 +30,14 @@ export class StockService {
     this.nameOfStock = this.stocks.nameOfStock;
     console.log(this.nameOfStock);
 
-    // let newTime = Date.now();
-    // console.log(this.lastTimeUsedAPI);
-    // console.log(newTime);
-    // if (newTime - this.lastTimeUsedAPI <= 1000*60) {
-    //   console.log("too soon");
-    //   return of(this.nameOfStock);
-    // }
-    // this.lastTimeUsedAPI = newTime;
+    let newTime = Date.now();
+    console.log(this.lastTimeUsedAPI);
+    console.log(newTime);
+    if (newTime - this.lastTimeUsedAPI <= 1000*60) {
+      console.log("too soon");
+      return of(this.nameOfStock);
+    }
+    this.lastTimeUsedAPI = newTime;
 
     // let stocks = [];
 
@@ -87,7 +89,7 @@ export class StockService {
           });
           console.log(indexOf);
           this.stocksObjects[indexOf] = stockObject;
-          this.http.put('http://127.0.0.1:3000/stocks/updateValues/' + indexOf, stockObject, {
+          this.http.put(url + '/stocks/updateValues/' + indexOf, stockObject, {
             observe: 'body',
             withCredentials: true,
             headers: new HttpHeaders().append('Content-Type', 'application/json')

@@ -4,6 +4,7 @@ import { StockObject } from '../stock';
 import { StockBoughtObject } from '../boughtStocks';
 import { GetStocksBoughtService } from '../get-stocks-bought.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-stocks',
@@ -18,6 +19,9 @@ export class StocksComponent implements OnInit {
   editing = [false, false, false];
   // holds all of the personal stock values 
   valueOfBought: any[];
+  link: String;
+  url: string = "https://www.google.com/search?q=";
+  urlSafe: SafeResourceUrl;
 
   addNewStock(stockName: string) {
     // this.stockService
@@ -86,8 +90,9 @@ export class StocksComponent implements OnInit {
     // try {
     this.stockService.getStocks().subscribe(data => {
       console.log(data);
-      // this.stocks = [];
       this.stocks = data;
+      console.log(this.stocks);
+
       // this.stockService.stocksObjects = [];
       // this.http.put('http://127.0.0.1:3000/stocks/updateValues', data, {
       //   observe: 'body',
@@ -136,11 +141,16 @@ export class StocksComponent implements OnInit {
 
   constructor(private stockService: StockService,
     private getStockBoughtService: GetStocksBoughtService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    public sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     // this.getStocks();
     this.getStocksBought();
+    // this.link = "https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8";
+    // this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl("https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8");
+    // this.urlSafe[1] = this.sanitizer.bypassSecurityTrustResourceUrl("https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8");
+
   }
 
 }
