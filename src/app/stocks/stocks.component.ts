@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { StockService } from '../stock.service';
+import { UserService } from '../user.service';
 import { StockObject } from '../stock';
-import { StockBoughtObject } from '../boughtStocks';
 import { GetStocksBoughtService } from '../get-stocks-bought.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stocks',
@@ -89,9 +90,21 @@ export class StocksComponent implements OnInit {
     console.log("hio");
     // try {
     this.stockService.getStocks().subscribe(data => {
+      // if (data.length != this.stockService.nameOfStock.length) {
+      //   this.getStocksBought();
+      //   console.log("here");
+      //   console.log(data.length );
+      //   console.log(this.stockService.nameOfStock.length );
+
+      // }
+      // else {
       console.log(data);
       this.stocks = data;
       console.log(this.stocks);
+      // }
+
+      // this.getStocksBought();
+
 
       // this.stockService.stocksObjects = [];
       // this.http.put('http://127.0.0.1:3000/stocks/updateValues', data, {
@@ -142,7 +155,19 @@ export class StocksComponent implements OnInit {
   constructor(private stockService: StockService,
     private getStockBoughtService: GetStocksBoughtService,
     private http: HttpClient,
-    public sanitizer: DomSanitizer) { }
+    public sanitizer: DomSanitizer,
+    private user: UserService,
+    private router: Router) {
+    this.user.user().subscribe(
+      data => {
+        console.log(data);
+        // this.user.loggedIn = true;
+        // this.loggedIn = true;
+        this.user.changeLoggedIn(true);
+      },
+      error => this.router.navigate(['/login'])
+    )
+  }
 
   ngOnInit(): void {
     // this.getStocks();

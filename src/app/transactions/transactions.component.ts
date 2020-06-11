@@ -112,8 +112,9 @@ export class TransactionsComponent implements OnInit {
     this.user.user().subscribe(
       data => {
         console.log(data);
-        this.user.loggedIn = true;
-        this.loggedIn = this.user.loggedIn;
+        // this.user.loggedIn = true;
+        this.loggedIn = true;
+        this.user.changeLoggedIn(true);
       },
       error => this.router.navigate(['/login'])
     )

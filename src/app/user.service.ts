@@ -10,11 +10,11 @@ const link = 'http://127.0.0.1:3000';
 })
 export class UserService {
   
-  event = new BehaviorSubject(false);
+  event = new BehaviorSubject(null);
   currentMessage = this.event.asObservable();
 
   constructor(private http: HttpClient) { 
-    this.loggedIn = false;
+    // this.loggedIn = false;
   }
 
   loggedIn: boolean; 

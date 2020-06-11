@@ -27,7 +27,11 @@ export class LoginComponent implements OnInit {
     else console.log('Invalid');
   }
 
-  constructor(private _user: UserService, private _router: Router) { }
+  constructor(private _user: UserService, private _router: Router) {
+    // this.user.loggedIn = true;
+    // this.loggedIn = true;
+    this._user.changeLoggedIn(false);
+  }
 
   ngOnInit(): void {
   }

@@ -6,6 +6,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
+            <ng-container *ngIf="loggedIn==null">
+                <li class="nav-item active"> </li>
+            </ng-container>
             <ng-container *ngIf="loggedIn">
                 <li class="nav-item active">
                     <a class="nav-link" routerLink="/stocks">股票指數</a>
@@ -17,7 +20,7 @@
                     <a class="nav-link" routerLink="/logout">登出</a>
                 </li>
             </ng-container>
-            <ng-container *ngIf="!loggedIn">
+            <ng-container *ngIf="loggedIn == false">
                 <li class="nav-item active">
                     <a class="nav-link" routerLink="/register">加入賬號</a>
                 </li>

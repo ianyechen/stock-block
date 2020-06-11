@@ -12,7 +12,7 @@ export class NavigationBarComponent implements OnInit {
   loggedIn: boolean;
 
   constructor(private user: UserService, private router: Router) {
-    this.updateLoggedIn();
+    // this.updateLoggedIn();
   }
 
   updateLoggedIn() {
