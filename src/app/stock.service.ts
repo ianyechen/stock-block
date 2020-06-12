@@ -7,6 +7,7 @@ import { GetStocksBoughtService } from './get-stocks-bought.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { last } from 'rxjs/operators';
 
 const key = require('../../key.json').key;
 // const key = process.env.KEY;
@@ -23,7 +24,7 @@ export class StockService {
   stocksObjects: any;
   adding: boolean;
   exceededAPI: boolean;
-  
+
   event = new BehaviorSubject(null);
   currentMessage = this.event.asObservable();
 
@@ -50,6 +51,7 @@ export class StockService {
   getStocks(): Observable<any[]> {
 
     let name: string, openValue: number, closeValue: number, prevCloseValue: number;
+    let _currentValue: number, _closeValue: number, _openValue: number;
     let countInner = 0;
     console.log("in getStocks()");
     this.nameOfStock = this.stocks.nameOfStock;
@@ -76,7 +78,7 @@ export class StockService {
       }
 
 
-      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + this.nameOfStock[count].symbol + `&apikey=${key}`;
+      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + this.nameOfStock[count].symbol + `&interval=5min&apikey=${key}&outputsize=compact`;
       fetch(link)
         .then(res => res.json())
         .then(data => {
@@ -126,30 +128,67 @@ export class StockService {
 
 
           // getting the latest day and second latest day 
-          for (let property in data["Time Series (Daily)"]) {
+          // for (let property in data["Time Series (Daily)"]) {
+
+          //   if (countInner == 0) {
+          //     closeValue = +data["Time Series (Daily)"][property]["4. close"];
+          //     openValue = +data["Time Series (Daily)"][property]["1. open"];
+          //     countInner++;
+          //     continue;
+          //   }
+
+          //   else if (countInner == 1) {
+          //     prevCloseValue = +data["Time Series (Daily)"][property]["4. close"];
+          //     countInner = 0;
+          //     break;
+          //   }
+
+          // }
+          let time = new Date();
+          let lastProperty: any;
+
+          for (let property in data["Time Series (5min)"]) {
 
             if (countInner == 0) {
-              closeValue = +data["Time Series (Daily)"][property]["4. close"];
-              openValue = +data["Time Series (Daily)"][property]["1. open"];
+              _currentValue = +data["Time Series (5min)"][property]["1. open"];
+              // closeValue = +data["Time Series (Daily)"][property]["4. close"];
+              // openValue = +data["Time Series (Daily)"][property]["1. open"];
               countInner++;
+              console.log(_currentValue+"_currentValue");
               continue;
             }
 
-            else if (countInner == 1) {
-              prevCloseValue = +data["Time Series (Daily)"][property]["4. close"];
-              countInner = 0;
+
+            // console.log(property);
+            // console.log(property.substr(0, 10) + 'sds');
+            let dateString = (time.getFullYear().toString() + "-0" + (time.getMonth() + 1).toString() + "-" + time.getDate().toString());
+            if (dateString != property.substr(0, 10)) {
+              _closeValue = +data["Time Series (5min)"][property]["4. close"];;
+              _openValue = +lastProperty["1. open"];
+              console.log(_closeValue+"_closeValue");
+              console.log(_openValue+"_openValue");
+
               break;
             }
+
+            lastProperty = data["Time Series (5min)"][property];
+            console.log(lastProperty);
+
+            // else if (countInner == 1) {
+            //   prevCloseValue = +data["Time Series (Daily)"][property]["4. close"];
+            //   countInner = 0;
+            //   break;
+            // }
 
           }
 
           let stockObject = {
             name: (this.nameOfStock[count].name) ? this.nameOfStock[count].name : name,
             symbol: name,
-            openValue: (openValue).toFixed(2),
-            closeValue: (closeValue).toFixed(2),
-            valueDiff: (closeValue - openValue).toFixed(2),
-            currentValue: (prevCloseValue).toFixed(2)
+            openValue: (_openValue).toFixed(2),
+            closeValue: (_closeValue).toFixed(2),
+            valueDiff: (_currentValue - _closeValue).toFixed(2),
+            currentValue: (_currentValue).toFixed(2)
           }
 
           console.log(stockObject);
