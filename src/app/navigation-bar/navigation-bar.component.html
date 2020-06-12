@@ -11,21 +11,21 @@
             </ng-container>
             <ng-container *ngIf="loggedIn">
                 <li class="nav-item active">
-                    <a class="nav-link" routerLink="/stocks">股票指數</a>
+                    <a class="nav-link" routerLink="/stocks">Stock Values</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" routerLink="/transactions">買賣記錄</a>
+                    <a class="nav-link" routerLink="/transactions">Transactions History</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" routerLink="/logout">登出</a>
+                    <a class="nav-link" routerLink="/logout">Logout</a>
                 </li>
             </ng-container>
             <ng-container *ngIf="loggedIn == false">
                 <li class="nav-item active">
-                    <a class="nav-link" routerLink="/register">加入賬號</a>
+                    <a class="nav-link" routerLink="/register">Register</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" routerLink="/login">登入賬號</a>
+                    <a class="nav-link" routerLink="/login">Login</a>
                 </li>
             </ng-container>
         </ul>

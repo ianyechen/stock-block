@@ -6,25 +6,25 @@
                 <div class="col">
                 </div>
                 <div class="col">
-                    <label for="formGroupNameInput">股票名稱</label>
-                    <input #name type="text" class="form-control" id="formGroupExampleInput" placeholder="股票名稱">
+                    <label for="formGroupNameInput">Stock Name</label>
+                    <input #name type="text" class="form-control" id="formGroupExampleInput" placeholder="Stock Name">
                 </div>
                 <div class="col">
-                    <label for="formGroupvalueBuyInput">買入金額</label>
-                    <input #valueBuy type="text" class="form-control" id="formGroupvalueBuyInput" placeholder="買入金額">
+                    <label for="formGroupvalueBuyInput">Buy Price</label>
+                    <input #valueBuy type="text" class="form-control" id="formGroupvalueBuyInput" placeholder="Buy Price">
                 </div>
                 <div class="col">
-                    <label for="formGroupdateBuyInput">買入日期</label>
-                    <input #dateBuy type="text" class="form-control" id="formGroupdateBuyInput" placeholder="買入日期">
+                    <label for="formGroupdateBuyInput">Buy Date</label>
+                    <input #dateBuy type="text" class="form-control" id="formGroupdateBuyInput" placeholder="Buy Date">
                 </div>
                 <div class="col">
-                    <label for="formGroupnumberBuyInput">股票數量</label>
-                    <input #numberBuy type="text" class="form-control" id="formGroupnumberBuyInput" placeholder="股票數量">
+                    <label for="formGroupnumberBuyInput">Amount</label>
+                    <input #numberBuy type="text" class="form-control" id="formGroupnumberBuyInput" placeholder="Amount">
                 </div>
                 <div class="col">
                     <br>
                     <button type="reset" class="btn btn-outline-success"
-                        (click)="save(name.value, valueBuy.value, dateBuy.value, numberBuy.value)">我要買</button>
+                        (click)="save(name.value, valueBuy.value, dateBuy.value, numberBuy.value)">Buy</button>
                 </div>
             </div>
         </form>
@@ -35,10 +35,10 @@
     <table class="table table-fixed">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">股票名稱</th>
-                <th scope="col">買入金額</th>
-                <th scope="col">買入日期</th>
-                <th scope="col">股票數量</th>
+                <th scope="col">Stock Name</th>
+                <th scope="col">Buy Price</th>
+                <th scope="col">Buy Date</th>
+                <th scope="col">Amount</th>
                 <th scope="col"> </th>
             </tr>
         </thead>
@@ -52,7 +52,7 @@
                         <td scope="row">{{ transaction.numberBuy }}</td>
                         <td>
                             <button (click)="updateDataForModal(count)" type="button" class="btn btn-outline-warning"
-                                data-toggle="modal" data-target="#exampleModal">我要賣</button>
+                                data-toggle="modal" data-target="#exampleModal">Sell</button>
                         </td>
                     </tr>
                 </ng-container>
@@ -65,17 +65,17 @@
     <div class="btn-group">
         <button (click)="fillStockNames()" type="button" class="btn btn-outline-primary dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            選擇股票
+            Display
         </button>
         <div class="dropdown-menu">
-            <a (click)="editHistoryShown('all')" class="dropdown-item">全部股票</a>
+            <a (click)="editHistoryShown('all')" class="dropdown-item">All</a>
             <ng-container *ngFor="let stockName of stockNames; let count = index;">
                 <a (click)="editHistoryShown(stockName)" class="dropdown-item">{{ stockName }}</a>
             </ng-container>
         </div>
     </div>
     <div style="float: right; margin-right: 2vw;">
-        <h6><strong> 所有金額: ${{ totalAmountOfMoney }} </strong></h6>
+        <h6><strong> Total Net Gain/Loss: ${{ totalAmountOfMoney }} </strong></h6>
     </div>
     <!-- <div class="row">
     <div class="col-md-8">.col-md-8</div>
@@ -85,13 +85,13 @@
     <table class="table table-fixed">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">股票名稱</th>
-                <th scope="col">買入金額</th>
-                <th scope="col">買入日期</th>
-                <th scope="col">股票數量</th>
-                <th scope="col">賣出金額</th>
-                <th scope="col">賣出日期</th>
-                <th scope="col">賺/賠金額</th>
+                <th scope="col">Stock Name</th>
+                <th scope="col">Buy Price</th>
+                <th scope="col">Buy Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">Sell Date</th>
+                <th scope="col">Net Gain/Loss</th>
                 <th scope="col">
                 </th>
             </tr>
@@ -111,7 +111,7 @@
                             <td scope="row" [class]="getColour(transaction.valueDiff)">{{ transaction.valueDiff }}</td>
                             <td>
                                 <button (click)=" delete(count)" type="button"
-                                    class="btn btn-outline-danger">刪除</button>
+                                    class="btn btn-outline-danger">Delete</button>
                             </td>
                         </tr>
                     </ng-container>
@@ -130,7 +130,7 @@
                             <td scope="row" [class]="getColour(transaction.valueDiff)">{{ transaction.valueDiff }}</td>
                             <td>
                                 <button (click)=" delete(count)" type="button"
-                                    class="btn btn-outline-danger">刪除</button>
+                                    class="btn btn-outline-danger">Delete</button>
                             </td>
                         </tr>
                     </ng-container>
@@ -146,7 +146,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">賣股票</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Sell Stock</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -154,20 +154,20 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="formGroupvalueSell">賣出金額</label>
+                            <label for="formGroupvalueSell">Sell Price</label>
                             <input #valueSell type="text" class="form-control" id="formGroupvalueSell"
-                                placeholder="賣出金額">
+                                placeholder="Sell Price">
                         </div>
                         <div class="form-group">
-                            <label for="formGroupdateSell">賣出日期</label>
-                            <input #dateSell type="text" class="form-control" id="formGroupdateSell" placeholder="賣出日期">
+                            <label for="formGroupdateSell">Sell Date</label>
+                            <input #dateSell type="text" class="form-control" id="formGroupdateSell" placeholder="Sell Date">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
                     <button (click)="sell(valueSell.value, dateSell.value)" type="button"
-                        class="btn btn-outline-success" data-dismiss="modal">確定</button>
+                        class="btn btn-outline-success" data-dismiss="modal">Confirm</button>
                 </div>
             </div>
         </div>

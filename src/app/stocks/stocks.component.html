@@ -1,7 +1,7 @@
 <table class="table  table-fixed">
     <thead class="thead-dark">
         <tr>
-            <th scope="col">股票名稱</th>
+            <th scope="col">Stock Name</th>
             <ng-container *ngIf="stocks && stocks.length">
                 <ng-container *ngFor="let stock of stocks; let count = index;">
                     <ng-container *ngIf="editing[count]; then yesEdit else noEdit"></ng-container>
@@ -13,7 +13,7 @@
                                 </div> -->
                             <input #inputBox type="text" placeholder="Name" class="col-md-4">
                             <button (click)="save(count, inputBox.value)" type="button"
-                                class="btn btn-secondary btn-sm">儲存</button>
+                                class="btn btn-secondary btn-sm">Save</button>
                             <!-- </div> -->
                         </th>
                     </ng-template>
@@ -22,14 +22,14 @@
                         <th> {{ stock.name }} &nbsp;&nbsp;
                             <!-- <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">更改</button> -->
                             <div class="btn-group">
-                                <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">更改</button>
+                                <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">Edit</button>
                                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
                                     <button (click)="delete(count)" type="button"
-                                        class="dropdown-item btn btn-secondary btn-sm">刪除</button>
+                                        class="dropdown-item btn btn-secondary btn-sm">Delete</button>
                                 </div>
                             </div>
                         </th>
@@ -52,12 +52,12 @@
             <th>
                 <!-- <button type="button" class="btn btn-secondary btn-sm">新增</button> -->
                 <form class="form-inline my-2 my-lg-0" style="float:right;">
-                    <button (click)="apiCall()" class="btn btn-primary my-2 my-sm-0" type="reset">更新</button>
+                    <button (click)="apiCall()" class="btn btn-primary my-2 my-sm-0" type="reset">Refresh</button>
                     &nbsp;&nbsp;
                     <input #stockName class="form-control mr-sm-2" type="search" placeholder="Search"
                         aria-label="Search">
                     <button (click)="addNewStock(stockName.value)" class="btn btn-outline-light my-2 my-sm-0"
-                        type="reset">新增</button>
+                        type="reset">Add</button>
 
                 </form>
             </th>
@@ -65,7 +65,7 @@
     </thead>
     <tbody>
         <tr>
-            <th scope="row">目前股價</th>
+            <th scope="row">Current</th>
             <ng-container *ngIf="stocks && stocks.length; then dCur else hCur"></ng-container>
             <ng-template #dCur>
                 <ng-container *ngFor="let stock of stocks">
@@ -123,7 +123,7 @@
         </tr>
         <br> -->
         <tr>
-            <th scope="row">開盤指數</th>
+            <th scope="row">Open</th>
             <ng-container *ngIf="stocks && stocks.length; then dOpen else hOpen"></ng-container>
             <ng-template #dOpen>
                 <ng-container *ngFor="let stock of stocks">
@@ -138,7 +138,7 @@
         </tr>
         <br>
         <tr>
-            <th scope="row">昨收指數</th>
+            <th scope="row">Prev Close</th>
             <ng-container *ngIf="stocks && stocks.length; then dPrevClose else hPrevClose"></ng-container>
             <ng-template #dPrevClose>
                 <ng-container *ngFor="let stock of stocks">
@@ -153,7 +153,7 @@
         </tr>
         <br>
         <tr>
-            <th scope="row">漲/跌金額</th>
+            <th scope="row">Value Diff</th>
             <ng-container *ngIf="stocks && stocks.length; then dValueDiff else hValueDiff"></ng-container>
             <ng-template #dValueDiff>
                 <ng-container *ngFor="let stock of stocks">
