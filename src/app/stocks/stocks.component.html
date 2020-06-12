@@ -173,7 +173,7 @@
 <!-- <br> -->
 <ng-container *ngIf="exceededAPI">
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        API Call has exceeded max number of times. Please try again at a later time.
+        {{errorMessage}}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

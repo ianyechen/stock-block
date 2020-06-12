@@ -23,12 +23,28 @@ export class StockService {
   stocksObjects: any;
   adding: boolean;
   exceededAPI: boolean;
+  
   event = new BehaviorSubject(null);
   currentMessage = this.event.asObservable();
+
+  refreshStocks = new BehaviorSubject(null);
+  refresh = this.refreshStocks.asObservable();
+
+  errorMessage = new BehaviorSubject(null);
+  errorM = this.errorMessage.asObservable();
 
   changeAPIVar(message: boolean) {
     this.event.next(message);
     this.exceededAPI = message;
+  }
+
+  changeRefreshVar(message: boolean) {
+    this.refreshStocks.next(message);
+  }
+
+  changeErrorMes(message: any) {
+    console.log(message);
+    this.errorMessage.next(message);
   }
 
   getStocks(): Observable<any[]> {
@@ -58,11 +74,7 @@ export class StockService {
         console.log("conitnue");
         continue;
       }
-      else if (this.adding && count == this.nameOfStock.length - 1) {
-        this.adding = false;
-        console.log("changing to false");
 
-      }
 
       let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + this.nameOfStock[count].symbol + `&apikey=${key}`;
       fetch(link)
@@ -76,8 +88,10 @@ export class StockService {
           }
           catch (err) {
             this.changeAPIVar(true);
+            this.exceededAPI = true;
             console.log(err);
             console.log(this.currentMessage);
+            this.changeErrorMes(data);
 
             // if (this.adding) {
             //   this.http.delete(url + '/stocks/delete/' + count, {
@@ -92,9 +106,23 @@ export class StockService {
           console.log(this.currentMessage);
 
           if (this.exceededAPI) {
+            if (this.adding) {
+              this.stocks.deleteStock(count).subscribe(data => {
+                console.log(data);
+                this.changeRefreshVar(true);
+              });
+              this.adding = false;
+              console.log("deleting");
+            }
             console.log("exceeded");
             return;
-          };
+          }
+
+          else if (this.adding && count == this.nameOfStock.length - 1) {
+            this.adding = false;
+            console.log("changing to false");
+
+          }
 
 
           // getting the latest day and second latest day 

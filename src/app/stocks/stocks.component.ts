@@ -24,26 +24,44 @@ export class StocksComponent implements OnInit {
   url: string = "https://www.google.com/search?q=";
   urlSafe: SafeResourceUrl;
   exceededAPI: boolean;
+  errorMessage: String = "SDFsdf";
 
   addNewStock(stockName: string) {
     // this.stockService
-    // let indexOf = this.getStockBoughtService.nameOfStock.findIndex(obj => {
-    //   console.log(obj);
-    //   console.log(name);
-    //   return obj.symbol == stockName;
-    // });
-    // console.log(indexOf);
-    // if (this.getStockBoughtService.nameOfStock)
-    console.log(this.getStockBoughtService.nameOfStock.length);
-    this.getStockBoughtService.saveStock(stockName).subscribe(data => {
-      console.log(data);
-      this.stockService.adding = true;
-      this.getStockBoughtService.getStockBought().subscribe(data => {
-        this.stocks = data;
-        console.log(this.valueOfBought);
-        this.apiCall();
-      });
+    let indexOf = this.getStockBoughtService.nameOfStock.findIndex(obj => {
+      console.log(obj);
+      console.log(name);
+      return obj.symbol == stockName;
     });
+    console.log(indexOf);
+    if (indexOf == -1) {
+      console.log(this.getStockBoughtService.nameOfStock.length);
+      this.getStockBoughtService.saveStock(stockName).subscribe(data => {
+        console.log(data);
+        this.stockService.adding = true;
+        this.getStockBoughtService.getStockBought().subscribe(data => {
+          this.stocks = data;
+          console.log(this.valueOfBought);
+          this.apiCall();
+          // this.stockService.getStocks().subscribe(data => {
+          //   // if (data.length != this.stockService.nameOfStock.length) {
+          //   //   this.getStocksBought();
+          //   //   console.log("here");
+          //   //   console.log(data.length );
+          //   //   console.log(this.stockService.nameOfStock.length );
+
+          //   // }
+          //   // else {
+          //   if (data[data.length-1].valueDiff == null) {
+          //     this.delete(data.length-1);
+          //   }
+          //   data.splice(data.length-1, 1);
+          //   this.stocks = data;
+          //   console.log(this.stocks);
+          // });
+        });
+      });
+    }
   }
 
   // changes colour depending if it's a pos or neg number 
@@ -63,7 +81,7 @@ export class StocksComponent implements OnInit {
     this.getStockBoughtService.deleteStock(index).subscribe(data => {
       console.log(data);
       this.getStocksBought();
-      
+
     })
   }
 
@@ -154,8 +172,9 @@ export class StocksComponent implements OnInit {
   getStocksBought() {
 
     this.getStockBoughtService.getStockBought().subscribe(data => {
+      console.log(data);
+      if (data[data.length - 1] != null && data[data.length - 1].valueDiff == null) data.splice(data.length - 1, 1);
       this.stocks = data;
-      console.log(this.valueOfBought);
       // this.getStocks();
     });
 
@@ -180,6 +199,17 @@ export class StocksComponent implements OnInit {
       console.log(data);
       this.exceededAPI = data;
     });
+    this.stockService.refresh.subscribe(data => {
+      if (data == true) {
+        this.getStocksBought();
+        this.stockService.changeRefreshVar(false);
+      }
+    })
+    this.stockService.errorM.subscribe(data => {
+      if (data != null) this.errorMessage = data["Error Message"] || data["Note"];
+      console.log(data);
+    })
+
   }
 
   ngOnInit(): void {
