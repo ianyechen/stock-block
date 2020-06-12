@@ -23,12 +23,21 @@ export class StocksComponent implements OnInit {
   link: String;
   url: string = "https://www.google.com/search?q=";
   urlSafe: SafeResourceUrl;
+  exceededAPI: boolean;
 
   addNewStock(stockName: string) {
     // this.stockService
+    // let indexOf = this.getStockBoughtService.nameOfStock.findIndex(obj => {
+    //   console.log(obj);
+    //   console.log(name);
+    //   return obj.symbol == stockName;
+    // });
+    // console.log(indexOf);
+    // if (this.getStockBoughtService.nameOfStock)
+    console.log(this.getStockBoughtService.nameOfStock.length);
     this.getStockBoughtService.saveStock(stockName).subscribe(data => {
       console.log(data);
-
+      this.stockService.adding = true;
       this.getStockBoughtService.getStockBought().subscribe(data => {
         this.stocks = data;
         console.log(this.valueOfBought);
@@ -54,7 +63,7 @@ export class StocksComponent implements OnInit {
     this.getStockBoughtService.deleteStock(index).subscribe(data => {
       console.log(data);
       this.getStocksBought();
-
+      
     })
   }
 
@@ -166,7 +175,11 @@ export class StocksComponent implements OnInit {
         this.user.changeLoggedIn(true);
       },
       error => this.router.navigate(['/login'])
-    )
+    );
+    this.stockService.currentMessage.subscribe(data => {
+      console.log(data);
+      this.exceededAPI = data;
+    });
   }
 
   ngOnInit(): void {

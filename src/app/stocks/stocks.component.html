@@ -169,9 +169,16 @@
         </tr>
     </tbody>
 </table>
-<br>
-<br>
-
+<!-- <br> -->
+<!-- <br> -->
+<ng-container *ngIf="exceededAPI">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        API Call has exceeded max number of times. Please try again at a later time.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</ng-container>
 <!-- <ng-container *ngIf="stocks && stocks.length; then dIframe else hIframe"></ng-container>
 <ng-template #dIframe>
     <ng-container *ngFor="let stock of stocks; let count = index">

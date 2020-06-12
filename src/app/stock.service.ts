@@ -4,7 +4,7 @@ import { StockObject } from './stock';
 
 import fetch from 'node-fetch';
 import { GetStocksBoughtService } from './get-stocks-bought.service';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -21,6 +21,15 @@ export class StockService {
   nameOfStock = [];
   lastTimeUsedAPI: any;
   stocksObjects: any;
+  adding: boolean;
+  exceededAPI: boolean;
+  event = new BehaviorSubject(null);
+  currentMessage = this.event.asObservable();
+
+  changeAPIVar(message: boolean) {
+    this.event.next(message);
+    this.exceededAPI = message;
+  }
 
   getStocks(): Observable<any[]> {
 
@@ -29,20 +38,31 @@ export class StockService {
     console.log("in getStocks()");
     this.nameOfStock = this.stocks.nameOfStock;
     console.log(this.nameOfStock);
-
-    let newTime = Date.now();
-    console.log(this.lastTimeUsedAPI);
-    console.log(newTime);
-    if (newTime - this.lastTimeUsedAPI <= 1000*60) {
-      console.log("too soon");
-      return of(this.nameOfStock);
-    }
-    this.lastTimeUsedAPI = newTime;
+    this.stocksObjects = this.nameOfStock;
+    this.changeAPIVar(false);
+    console.log(this.currentMessage);
+    // let newTime = Date.now();
+    // console.log(this.lastTimeUsedAPI);
+    // console.log(newTime);
+    // if (newTime - this.lastTimeUsedAPI <= 1000*60) {
+    //   console.log("too soon");
+    //   return of(this.nameOfStock);
+    // }
+    // this.lastTimeUsedAPI = newTime;
 
     // let stocks = [];
 
     for (let count = 0; count < this.nameOfStock.length; count++) {
       // for (let count = 0; count < 1; count++) {
+      if (this.adding && count != this.nameOfStock.length - 1) {
+        console.log("conitnue");
+        continue;
+      }
+      else if (this.adding && count == this.nameOfStock.length - 1) {
+        this.adding = false;
+        console.log("changing to false");
+
+      }
 
       let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + this.nameOfStock[count].symbol + `&apikey=${key}`;
       fetch(link)
@@ -50,7 +70,32 @@ export class StockService {
         .then(data => {
 
           console.log(data);
-          name = data["Meta Data"]["2. Symbol"];
+          try {
+            name = data["Meta Data"]["2. Symbol"];
+            // this.changeAPIVar(false);
+          }
+          catch (err) {
+            this.changeAPIVar(true);
+            console.log(err);
+            console.log(this.currentMessage);
+
+            // if (this.adding) {
+            //   this.http.delete(url + '/stocks/delete/' + count, {
+            //     observe: 'body',
+            //     withCredentials: true,
+            //     headers: new HttpHeaders().append('Content-Type', 'application/json')
+            //   }).subscribe(data2 => {
+            //     console.log(data2);
+            //   });
+            // }
+          }
+          console.log(this.currentMessage);
+
+          if (this.exceededAPI) {
+            console.log("exceeded");
+            return;
+          };
+
 
           // getting the latest day and second latest day 
           for (let property in data["Time Series (Daily)"]) {
