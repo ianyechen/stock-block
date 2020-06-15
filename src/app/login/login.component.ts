@@ -10,10 +10,17 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  error: boolean;
+  errorMessage: string; 
+
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.email, Validators.required]),
     password: new FormControl(null, Validators.required)
   });
+
+  cancelAlert() {
+    this.error = false;
+  }
 
   login() {
     if (this.loginForm.valid) {
@@ -21,6 +28,10 @@ export class LoginComponent implements OnInit {
         console.log(data);
         this._user.changeLoggedIn(true);
         this._router.navigate(['/transactions']);
+      }, error => {
+        console.log(error);
+        this.error = true;
+        this.errorMessage = error.error.message;
       })
       console.log(JSON.stringify(this.loginForm.value));
     }
