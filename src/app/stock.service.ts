@@ -11,8 +11,8 @@ import { last } from 'rxjs/operators';
 
 const key = require('../../key.json').key;
 // const key = process.env.KEY;
-// const link = 'https://manage-my-stocks-database.herokuapp.com';
-const url = 'http://127.0.0.1:3000';
+const url = 'https://manage-my-stocks-database.herokuapp.com';
+// const url = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'

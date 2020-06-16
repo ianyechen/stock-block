@@ -5,8 +5,8 @@ import { map } from 'rxjs/operators';
 
 // let url = "https://manage-my-stocks-database.herokuapp.com/";
 // let url = "http://localhost:4000/";
-// const link = 'https://manage-my-stocks-database.herokuapp.com';
-const link = 'http://127.0.0.1:3000';
+const link = 'https://manage-my-stocks-database.herokuapp.com';
+// const link = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
