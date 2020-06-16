@@ -154,6 +154,8 @@ export class StockService {
               // closeValue = +data["Time Series (Daily)"][property]["4. close"];
               // openValue = +data["Time Series (Daily)"][property]["1. open"];
               countInner++;
+              lastProperty = data["Time Series (5min)"][property];
+
               // console.log(_currentValue+"_currentValue");
               continue;
             }
