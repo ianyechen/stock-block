@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   error: boolean;
-  errorMessage: string; 
+  errorMessage: string;
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.email, Validators.required]),
@@ -31,11 +31,16 @@ export class LoginComponent implements OnInit {
       }, error => {
         console.log(error);
         this.error = true;
-        this.errorMessage = error.error.message;
+        if (error.error.message.includes("username")) this.errorMessage = "Incorrect email. Please try again.";
+        else this.errorMessage = "Incorrect password. Please try again.";
       })
       console.log(JSON.stringify(this.loginForm.value));
     }
-    else console.log('Invalid');
+    else {
+      console.log('Invalid');
+      this.error = true;
+      this.errorMessage = "Invalid inputs. Please try again.";
+    }
   }
 
   constructor(private _user: UserService, private _router: Router) {

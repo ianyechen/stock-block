@@ -146,7 +146,7 @@ export class StockService {
           // }
           let time = new Date();
           let lastProperty: any;
-
+          countInner = 0;
           for (let property in data["Time Series (5min)"]) {
 
             if (countInner == 0) {
@@ -154,7 +154,7 @@ export class StockService {
               // closeValue = +data["Time Series (Daily)"][property]["4. close"];
               // openValue = +data["Time Series (Daily)"][property]["1. open"];
               countInner++;
-              console.log(_currentValue+"_currentValue");
+              // console.log(_currentValue+"_currentValue");
               continue;
             }
 
@@ -165,14 +165,14 @@ export class StockService {
             if (dateString != property.substr(0, 10)) {
               _closeValue = +data["Time Series (5min)"][property]["4. close"];;
               _openValue = +lastProperty["1. open"];
-              console.log(_closeValue+"_closeValue");
-              console.log(_openValue+"_openValue");
+              console.log(_closeValue + "_closeValue");
+              console.log(_openValue + "_openValue");
 
               break;
             }
 
             lastProperty = data["Time Series (5min)"][property];
-            console.log(lastProperty);
+            // console.log(lastProperty);
 
             // else if (countInner == 1) {
             //   prevCloseValue = +data["Time Series (Daily)"][property]["4. close"];

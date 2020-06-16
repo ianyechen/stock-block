@@ -62,6 +62,10 @@ export class StocksComponent implements OnInit {
         });
       });
     }
+    else {
+      this.exceededAPI = true;
+      this.errorMessage = "Stock item is already displayed."
+    }
   }
 
   // changes colour depending if it's a pos or neg number 
@@ -122,6 +126,7 @@ export class StocksComponent implements OnInit {
       //   console.log("here");
       //   console.log(data.length );
       //   console.log(this.stockService.nameOfStock.length );
+      console.log("hio2");
 
       // }
       // else {
@@ -163,7 +168,7 @@ export class StocksComponent implements OnInit {
 
   apiCall() {
     this.getStockBoughtService.getStockBought().subscribe(data => {
-
+      console.log(data);
       this.getStocks();
     });
   }
@@ -206,9 +211,14 @@ export class StocksComponent implements OnInit {
       }
     })
     this.stockService.errorM.subscribe(data => {
-      if (data != null) this.errorMessage = data["Error Message"] || data["Note"];
+      if (data != null) {
+        let message = data["Error Message"] || data["Note"];
+        if (message.includes("Invalid")) this.errorMessage = 'Incorrect symbol. Please enter a valid stock symbol (Eg. "tsla", "msft")';
+        else if (message.includes("standard")) this.errorMessage = "Exceeded maximum API call frequency (5 calls per minute and 500 calls per day). Please try again later.";
+      }
       console.log(data);
     })
+    this.exceededAPI = false;
 
   }
 

@@ -24,10 +24,13 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    if (!this.registerForm.valid ||
-      this.registerForm.controls.password.value != this.registerForm.controls.confirmPassword.value) {
+    if (!this.registerForm.valid) {
+      this.errorMessage = "Invalid inputs. Please try again.";
+      this.error = true;
+    }
+    else if (this.registerForm.controls.password.value != this.registerForm.controls.confirmPassword.value) {
       console.log('Invalid Form');
-      this.errorMessage = "Passwords do not match. Please check again.";
+      this.errorMessage = "Passwords do not match. Please try again.";
       this.error = true;
     }
     else {
@@ -36,15 +39,16 @@ export class RegisterComponent implements OnInit {
         console.log(data);
         this._router.navigate(['/login']);
       }, error => {
-        console.log(error);
+        console.log(error.error.errmsg);
         this.error = true;
-        this.errorMessage = error.error.errmsg;
+        if (error.error.errmsg.includes("email_1")) this.errorMessage = "Email has been used. Please try again.";
+        else if (error.error.errmsg.includes("username_1")) this.errorMessage = "Username has been used. Please try again.";
         console.log(this.errorMessage);
       })
     }
   }
 
-  constructor(private _userService: UserService, private _router: Router) { 
+  constructor(private _userService: UserService, private _router: Router) {
     this._userService.changeLoggedIn(false);
   }
 
