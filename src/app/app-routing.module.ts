@@ -16,7 +16,6 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent },
 ]
 
-
 @NgModule({
   declarations: [],
   imports: [

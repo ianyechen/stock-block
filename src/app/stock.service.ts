@@ -1,191 +1,138 @@
-// this service gets the current stock information from AlphaVantage 
 import { Injectable } from '@angular/core';
-import { StockObject } from './stock';
-
-import fetch from 'node-fetch';
 import { GetStocksBoughtService } from './get-stocks-bought.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { of } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { last } from 'rxjs/operators';
+import fetch from 'node-fetch';
 
-// const key = require('../../key.json').key;
-const key = process.env.KEY;
-const url = 'https://manage-my-stocks-database.herokuapp.com';
-// const url = 'http://127.0.0.1:3000';
+// const key = process.env.KEY;
+// const url = 'https://manage-my-stocks-database.herokuapp.com';
+
+const key = require('../../key.json').key;
+const url = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockService {
 
-  nameOfStock = [];
-  lastTimeUsedAPI: any;
+  // this holds all the stocks that are in the database for display
+  stocksDisplayed = [];
+  // this holds all the stocks with updated values after the API calls 
   stocksObjects: any;
+  // this holds whether or not a new stock is being added for display (only calls API when adding)
   adding: boolean;
+  // this holds whether the API restrictions have been exceeded or not 
   exceededAPI: boolean;
 
-  event = new BehaviorSubject(null);
-  currentMessage = this.event.asObservable();
+  // for when API calls are exceeded, used in other files
+  error = new BehaviorSubject(null);
+  currentError = this.error.asObservable();
 
+  // for when the refresh button is clicked
   refreshStocks = new BehaviorSubject(null);
-  refresh = this.refreshStocks.asObservable();
+  currentRefreshStocks = this.refreshStocks.asObservable();
 
+  // for the message of the error 
   errorMessage = new BehaviorSubject(null);
-  errorM = this.errorMessage.asObservable();
+  currentErrorMessage = this.errorMessage.asObservable();
 
-  changeAPIVar(message: boolean) {
-    this.event.next(message);
-    this.exceededAPI = message;
+  changeAPIVar(errorStatus: boolean) {
+    this.error.next(errorStatus);
+    this.exceededAPI = errorStatus;
   }
 
-  changeRefreshVar(message: boolean) {
-    this.refreshStocks.next(message);
+  changeRefreshVar(refresh: boolean) {
+    this.refreshStocks.next(refresh);
   }
 
   changeErrorMes(message: any) {
-    console.log(message);
     this.errorMessage.next(message);
   }
 
   getStocks(): Observable<any[]> {
 
-    let name: string, openValue: number, closeValue: number, prevCloseValue: number;
-    let _currentValue: number, _closeValue: number, _openValue: number;
+    let name: string, _currentValue: number, _closeValue: number, _openValue: number;
     let countInner = 0;
-    console.log("in getStocks()");
-    this.nameOfStock = this.stocks.nameOfStock;
-    console.log(this.nameOfStock);
-    this.stocksObjects = this.nameOfStock;
+
+    // getting the stocks array in the database
+    this.stocksDisplayed = this.stocks.stocksSaved;
+    this.stocksObjects = this.stocksDisplayed;
+
+    // no error at first
     this.changeAPIVar(false);
-    console.log(this.currentMessage);
-    // let newTime = Date.now();
-    // console.log(this.lastTimeUsedAPI);
-    // console.log(newTime);
-    // if (newTime - this.lastTimeUsedAPI <= 1000*60) {
-    //   console.log("too soon");
-    //   return of(this.nameOfStock);
-    // }
-    // this.lastTimeUsedAPI = newTime;
 
-    // let stocks = [];
+    for (let count = 0; count < this.stocksDisplayed.length; count++) {
 
-    for (let count = 0; count < this.nameOfStock.length; count++) {
-      // for (let count = 0; count < 1; count++) {
-      if (this.adding && count != this.nameOfStock.length - 1) {
-        console.log("conitnue");
-        continue;
-      }
+      // if adding, only need to call api for the one being added, the others just used old data from db
+      if (this.adding && count != this.stocksDisplayed.length - 1) continue;
 
+      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + this.stocksDisplayed[count].symbol + `&interval=5min&apikey=${key}&outputsize=compact`;
 
-      let link = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + this.nameOfStock[count].symbol + `&interval=5min&apikey=${key}&outputsize=compact`;
       fetch(link)
         .then(res => res.json())
-        .then(data => {
+        .then(stocksData => {
 
-          console.log(data);
+          console.log(stocksData);
+
+          // see if API was succesful or not
           try {
-            name = data["Meta Data"]["2. Symbol"];
-            // this.changeAPIVar(false);
+            name = stocksData["Meta Data"]["2. Symbol"];
           }
+
           catch (err) {
             this.changeAPIVar(true);
             this.exceededAPI = true;
-            console.log(err);
-            console.log(this.currentMessage);
-            this.changeErrorMes(data);
-
-            // if (this.adding) {
-            //   this.http.delete(url + '/stocks/delete/' + count, {
-            //     observe: 'body',
-            //     withCredentials: true,
-            //     headers: new HttpHeaders().append('Content-Type', 'application/json')
-            //   }).subscribe(data2 => {
-            //     console.log(data2);
-            //   });
-            // }
+            this.changeErrorMes(stocksData);
+            console.log("An error has occured while attempting to call API: " + err);
           }
-          console.log(this.currentMessage);
 
+          // if API calls exceeded, return 
           if (this.exceededAPI) {
+
+            // if adding, delete the stock that was added 
             if (this.adding) {
               this.stocks.deleteStock(count).subscribe(data => {
-                console.log(data);
                 this.changeRefreshVar(true);
               });
               this.adding = false;
-              console.log("deleting");
             }
-            console.log("exceeded");
             return;
+
           }
 
-          else if (this.adding && count == this.nameOfStock.length - 1) {
+          else if (this.adding && count == this.stocksDisplayed.length - 1) {
             this.adding = false;
-            console.log("changing to false");
-
           }
 
-
-          // getting the latest day and second latest day 
-          // for (let property in data["Time Series (Daily)"]) {
-
-          //   if (countInner == 0) {
-          //     closeValue = +data["Time Series (Daily)"][property]["4. close"];
-          //     openValue = +data["Time Series (Daily)"][property]["1. open"];
-          //     countInner++;
-          //     continue;
-          //   }
-
-          //   else if (countInner == 1) {
-          //     prevCloseValue = +data["Time Series (Daily)"][property]["4. close"];
-          //     countInner = 0;
-          //     break;
-          //   }
-
-          // }
           let time = new Date();
           let lastProperty: any;
           countInner = 0;
-          for (let property in data["Time Series (5min)"]) {
 
+          for (let property in stocksData["Time Series (5min)"]) {
+
+            // getting the latest values 
             if (countInner == 0) {
-              _currentValue = +data["Time Series (5min)"][property]["1. open"];
-              // closeValue = +data["Time Series (Daily)"][property]["4. close"];
-              // openValue = +data["Time Series (Daily)"][property]["1. open"];
+              _currentValue = +stocksData["Time Series (5min)"][property]["1. open"];
+              lastProperty = stocksData["Time Series (5min)"][property];
               countInner++;
-              lastProperty = data["Time Series (5min)"][property];
-
-              // console.log(_currentValue+"_currentValue");
               continue;
             }
 
-
-            // console.log(property);
-            // console.log(property.substr(0, 10) + 'sds');
             let dateString = (time.getFullYear().toString() + "-0" + (time.getMonth() + 1).toString() + "-" + time.getDate().toString());
-            if (dateString != property.substr(0, 10)) {
-              _closeValue = +data["Time Series (5min)"][property]["4. close"];;
-              _openValue = +lastProperty["1. open"];
-              console.log(_closeValue + "_closeValue");
-              console.log(_openValue + "_openValue");
 
+            // getting the close and open values 
+            if (dateString != property.substr(0, 10)) {
+              _closeValue = +stocksData["Time Series (5min)"][property]["4. close"];;
+              _openValue = +lastProperty["1. open"];
               break;
             }
 
-            lastProperty = data["Time Series (5min)"][property];
-            // console.log(lastProperty);
-
-            // else if (countInner == 1) {
-            //   prevCloseValue = +data["Time Series (Daily)"][property]["4. close"];
-            //   countInner = 0;
-            //   break;
-            // }
+            lastProperty = stocksData["Time Series (5min)"][property];
 
           }
 
           let stockObject = {
-            name: (this.nameOfStock[count].name) ? this.nameOfStock[count].name : name,
+            name: (this.stocksDisplayed[count].name) ? this.stocksDisplayed[count].name : name,
             symbol: name,
             openValue: (_openValue).toFixed(2),
             closeValue: (_closeValue).toFixed(2),
@@ -193,43 +140,37 @@ export class StockService {
             currentValue: (_currentValue).toFixed(2)
           }
 
-          console.log(stockObject);
           let indexOf: number;
-          console.log(this.nameOfStock);
-          indexOf = this.nameOfStock.findIndex(obj => {
-            console.log(obj);
-            console.log(name);
+
+          indexOf = this.stocksDisplayed.findIndex(obj => {
             return obj.symbol == name;
           });
-          console.log(indexOf);
+
+          // updating the stockObject in its index 
           this.stocksObjects[indexOf] = stockObject;
+          // updating the arrary object in the db 
           this.http.put(url + '/stocks/updateValues/' + indexOf, stockObject, {
             observe: 'body',
             withCredentials: true,
             headers: new HttpHeaders().append('Content-Type', 'application/json')
-          }).subscribe(data2 => {
-            console.log(data2);
+          }).subscribe(data => {
+            console.log(data);
           });
+
         });
 
     }
 
-    if (this.nameOfStock.length) {
-      console.log(this.stocksObjects);
+    if (this.stocksDisplayed.length) {
       return of(this.stocksObjects);
     }
+
     else return of([]);
 
   }
 
   constructor(private stocks: GetStocksBoughtService, private http: HttpClient) {
-    // this.stocks.getStockBought().subscribe(data => {
-    //   console.log(data);
-    //   this.nameOfStock = data;
-    //   console.log("got dats");
-    // });
     this.stocksObjects = [];
-
   }
 
 }

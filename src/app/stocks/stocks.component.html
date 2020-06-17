@@ -7,22 +7,16 @@
                     <ng-container *ngIf="editing[count]; then yesEdit else noEdit"></ng-container>
                     <ng-template #yesEdit>
                         <th>
-                            <!-- <div class="input-group mb-3"> -->
-                            <!-- <div class="input-group-prepend">
-                                    <span class="input-group-text"></span>
-                                </div> -->
                             <input #inputBox type="text" placeholder="Name" class="col-md-4">
                             <button (click)="save(count, inputBox.value)" type="button"
                                 class="btn btn-secondary btn-sm">Save</button>
-                            <!-- </div> -->
                         </th>
                     </ng-template>
                     <ng-template #noEdit>
-                        <!-- <ng-container *ngIf="valueOfBought"> -->
                         <th> {{ stock.name }} &nbsp;&nbsp;
-                            <!-- <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">更改</button> -->
                             <div class="btn-group">
-                                <button (click)="edit(count)" type="button" class="btn btn-secondary btn-sm">Edit</button>
+                                <button (click)="edit(count)" type="button"
+                                    class="btn btn-secondary btn-sm">Edit</button>
                                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
@@ -33,24 +27,10 @@
                                 </div>
                             </div>
                         </th>
-                        <!-- </ng-container> -->
                     </ng-template>
                 </ng-container>
-                <!-- <ng-container *ngFor="let index of editing; let count = index;"> -->
-
-                <!-- </ng-container> -->
             </ng-container>
-            <!-- <ng-template #dName> -->
-
-
-            <!-- </ng-template> -->
-            <!-- <ng-template #hName>
-                <ng-container *ngFor="let number of [0, 1, 2]">
-                    <th></th>
-                </ng-container>
-            </ng-template> -->
             <th>
-                <!-- <button type="button" class="btn btn-secondary btn-sm">新增</button> -->
                 <form class="form-inline my-2 my-lg-0" style="float:right;">
                     <button (click)="apiCall()" class="btn btn-primary my-2 my-sm-0" type="reset">Refresh</button>
                     &nbsp;&nbsp;
@@ -58,7 +38,6 @@
                         aria-label="Search">
                     <button (click)="addNewStock(stockName.value)" class="btn btn-outline-light my-2 my-sm-0"
                         type="reset">Add</button>
-
                 </form>
             </th>
         </tr>
@@ -73,55 +52,9 @@
                 </ng-container>
             </ng-template>
             <ng-template #hCur>
-                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
-                    <td></td>
-                </ng-container> -->
             </ng-template>
         </tr>
-        <!-- <br>
-        <tr>
-            <th scope="row">買入金額</th>
-            <ng-container *ngFor="let index of editing; let count = index;">
-                <ng-container *ngIf="editing[count]; then yesEdit else noEdit"></ng-container>
-                <ng-template #yesEdit>
-                    <td>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">$</span>
-                            </div>
-                            <input #inputBox type="text" class="col-xs-2">
-                            <button (click)="save(count, inputBox.value)" type="button"
-                                class="btn btn-secondary btn-sm">儲存</button>
-                        </div>
-                    </td>
-                </ng-template>
-                <ng-template #noEdit>
-                    <ng-container *ngIf="valueOfBought">
-                        <td>{{ valueOfBought[count].item.stockValue }}&nbsp;&nbsp; <button (click)="edit(count)"
-                                type="button" class="btn btn-secondary btn-sm">更改</button></td>
-                    </ng-container>
-                </ng-template>
-            </ng-container>
-        </tr> -->
         <br>
-        <!-- <tr>
-            <th scope="row">賺/賠金額</th>
-            <ng-container *ngIf="valueOfBought && stocks && stocks.length; then dnetValue else hnetValue">
-            </ng-container>
-            <ng-template #dnetValue>
-                <ng-container *ngFor="let index of makeArray(3); let count = index;">
-                    <td
-                        [class]="getColour((+(stocks[count].closeValue - valueOfBought[count].item.stockValue)).toFixed(2))">
-                        {{ (+(stocks[count].closeValue - valueOfBought[count].item.stockValue)).toFixed(2) }}</td>
-                </ng-container>
-            </ng-template>
-            <ng-template #hnetValue>
-                <ng-container *ngFor="let number of [0, 1, 2]">
-                    <td></td>
-                </ng-container>
-            </ng-template>
-        </tr>
-        <br> -->
         <tr>
             <th scope="row">Open</th>
             <ng-container *ngIf="stocks && stocks.length; then dOpen else hOpen"></ng-container>
@@ -131,9 +64,6 @@
                 </ng-container>
             </ng-template>
             <ng-template #hOpen>
-                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
-                    <td></td>
-                </ng-container> -->
             </ng-template>
         </tr>
         <br>
@@ -146,9 +76,6 @@
                 </ng-container>
             </ng-template>
             <ng-template #hPrevClose>
-                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
-                    <td></td>
-                </ng-container> -->
             </ng-template>
         </tr>
         <br>
@@ -162,15 +89,12 @@
                 </ng-container>
             </ng-template>
             <ng-template #hValueDiff>
-                <!-- <ng-container *ngFor="let number of [0, 1, 2]">
-                    <td></td>
-                </ng-container> -->
             </ng-template>
         </tr>
     </tbody>
 </table>
-<!-- <br> -->
-<!-- <br> -->
+
+<!--Warning Messages-->
 <ng-container *ngIf="exceededAPI">
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{errorMessage}}
@@ -179,28 +103,3 @@
         </button>
     </div>
 </ng-container>
-<!-- <ng-container *ngIf="stocks && stocks.length; then dIframe else hIframe"></ng-container>
-<ng-template #dIframe>
-    <ng-container *ngFor="let stock of stocks; let count = index">
-        <iframe style="height: 20vw; width: 33vw;"
-        [src]="urlSafe">
-        </iframe>
-    </ng-container>
-</ng-template>
-<ng-template #hIframe>
-    <ng-container *ngFor="let number of [0, 1, 2]">
-        <td></td>
-    </ng-container>
-</ng-template> -->
-<!-- <iframe style="height: 20vw; width: 33vw;"
-    src="https://www.google.com/search?safe=strict&rlz=1C1CHBF_enCA778CA779&sxsrf=ALeKk03-HlVSd9S6rBNfSsMsUsoORNKJDw%3A1589671749308&ei=RXfAXtaxEvm90PEPpLCYsAM&q=tesla+stocks&oq=tesla+stocks&gs_lcp=CgZwc3ktYWIQAzIMCCMQJxCdAhBGEPoBMgQIABBDMgcIABAUEIcCMgIIADICCAAyAggAMgIIADICCAAyAggAMgIIADoECAAQRzoHCCMQsQIQJzoGCAAQBxAeOgoIIxCwAhAnEJ0COgQIABANOgoIIxCxAhAnEJ0CUNucO1icojtg_6I7aABwB3gBgAHGA4gBwAaSAQU1LjQtMZgBAKABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwiW6LTfxLnpAhX5HjQIHSQYBjYQ4dUDCAw&uact=5">
-</iframe>
-<iframe style="height: 20vw; width: 33vw;"
-    src="https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8">
-</iframe>
-<iframe style="height: 20vw; width: 33vw;"
-    src="https://www.google.com/search?q=shopify+stocks&rlz=1C1CHBF_enCA778CA779&oq=shopify+stocks&aqs=chrome.0.69i59l2j35i39j0l3j69i60j69i61.2568j0j1&sourceid=chrome&ie=UTF-8">
-</iframe>
-<iframe style="height: 20vw; width: 33vw;"
-    src="https://www.google.com/search?q=shopify+stocks&rlz=1C1CHBF_enCA778CA779&oq=shopify+stocks&aqs=chrome.0.69i59l2j35i39j0l3j69i60j69i61.2568j0j1&sourceid=chrome&ie=UTF-8">
-</iframe> -->

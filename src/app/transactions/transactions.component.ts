@@ -21,10 +21,10 @@ export class TransactionsComponent implements OnInit {
   showHistory: string;
   // holds the total amount of money being displayed 
   totalAmountOfMoney: number;
-
+  // holds whether or not the user is logged in 
   loggedIn: boolean;
 
-  // changing the showHistory variable 
+  // changing the showHistory variable, displays either all transactions or certain stocks 
   editHistoryShown(type: string) {
 
     this.showHistory = type;
@@ -48,7 +48,7 @@ export class TransactionsComponent implements OnInit {
 
   }
 
-  // changes colour depending if it's a pos or neg number 
+  // changes colour depending if it's a positive or negative number 
   getColour(value: string) {
     if (+value >= 0) return "text-success";
     else return "text-danger";
@@ -57,7 +57,6 @@ export class TransactionsComponent implements OnInit {
   // saving a transaction (only bought)
   save(name: string, valueBuy: number, dateBuy: number, numberBuy: number) {
     this.getTransactionsService.saveTransaction(name, valueBuy, dateBuy, numberBuy).subscribe(data => {
-      console.log(data);
       this.get();
     })
   }
@@ -65,61 +64,62 @@ export class TransactionsComponent implements OnInit {
   // getting all transactions 
   get() {
     this.getTransactionsService.getTransaction().subscribe(data => {
-      console.log(data);
-      // this.transactions = data.item.array;
       this.transactions = data.transactions;
       this.totalAmountOfMoney = 0;
       for (let transaction of this.transactions) {
         this.totalAmountOfMoney += transaction.valueDiff;
       }
-    })
+    });
   }
 
   // editing the transactions (for selling)
   edit(transactionObject: TransactionObject) {
     this.getTransactionsService.editTransaction(transactionObject, this.modalNumber).subscribe(data => {
-      console.log(data);
       this.get();
     });
   }
 
   // selling the stock 
   sell(valueSell: number, dateSell: string) {
-    console.log(this.transactions[this.modalNumber]);
+
     this.transactions[this.modalNumber].valueSell = +valueSell;
     this.transactions[this.modalNumber].dateSell = dateSell;
     this.transactions[this.modalNumber].valueDiff = (+valueSell - this.transactions[this.modalNumber].valueBuy) * this.transactions[this.modalNumber].numberBuy - 20;
-    console.log(this.transactions[this.modalNumber]);
     this.edit(this.transactions[this.modalNumber]);
+
+    // resetting the form values 
     (<HTMLInputElement>document.getElementById('formGroupvalueSell')).value = '';
     (<HTMLInputElement>document.getElementById('formGroupdateSell')).value = '';
+
   }
 
+  // deleting a transaction 
   delete(index: number) {
     this.getTransactionsService.deleteTransaction(index).subscribe(data => {
-      console.log(data);
       this.get();
     })
   }
 
   updateDataForModal(index: number) {
-    console.log(index);
-    console.log(this.transactions[index]);
     this.modalNumber = index;
   }
 
   constructor(private getTransactionsService: GetTransactionsService, private user: UserService, private router: Router) {
-    this.user.user().subscribe(
+
+    this.user.validate().subscribe(
       data => {
-        console.log(data);
-        // this.user.loggedIn = true;
         this.loggedIn = true;
         this.user.changeLoggedIn(true);
       },
-      error => this.router.navigate(['/login'])
+      error => {
+        console.log(error);
+        this.router.navigate(['/login']);
+      }
     )
+
     this.showHistory = "all";
     this.totalAmountOfMoney = 0;
+
   }
 
   ngOnInit(): void {

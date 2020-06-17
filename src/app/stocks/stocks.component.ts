@@ -3,8 +3,6 @@ import { StockService } from '../stock.service';
 import { UserService } from '../user.service';
 import { StockObject } from '../stock';
 import { GetStocksBoughtService } from '../get-stocks-bought.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,58 +15,40 @@ export class StocksComponent implements OnInit {
   // holds all of the current stock information  
   stocks: StockObject[];
   // allows for editing or not of personal stock values 
-  editing = [false, false, false];
-  // holds all of the personal stock values 
-  valueOfBought: any[];
-  link: String;
-  url: string = "https://www.google.com/search?q=";
-  urlSafe: SafeResourceUrl;
+  editing = [];
+  // whether or not user has exceeded number of API calls 
   exceededAPI: boolean;
-  errorMessage: String = "SDFsdf";
+  // error message to be shown for the user when error occurs 
+  errorMessage: String = "";
 
+  // adding a new stock to be displayed 
   addNewStock(stockName: string) {
-    // this.stockService
-    let indexOf = this.getStockBoughtService.nameOfStock.findIndex(obj => {
-      console.log(obj);
-      console.log(name);
+
+    let indexOf = this.getStockBoughtService.stocksSaved.findIndex(obj => {
       return obj.symbol == stockName;
     });
-    console.log(indexOf);
+
+    // if the item is found in the array, display error message, only calls API if it's a new item 
     if (indexOf == -1) {
-      console.log(this.getStockBoughtService.nameOfStock.length);
+
       this.getStockBoughtService.saveStock(stockName).subscribe(data => {
-        console.log(data);
         this.stockService.adding = true;
         this.getStockBoughtService.getStockBought().subscribe(data => {
           this.stocks = data;
-          console.log(this.valueOfBought);
           this.apiCall();
-          // this.stockService.getStocks().subscribe(data => {
-          //   // if (data.length != this.stockService.nameOfStock.length) {
-          //   //   this.getStocksBought();
-          //   //   console.log("here");
-          //   //   console.log(data.length );
-          //   //   console.log(this.stockService.nameOfStock.length );
-
-          //   // }
-          //   // else {
-          //   if (data[data.length-1].valueDiff == null) {
-          //     this.delete(data.length-1);
-          //   }
-          //   data.splice(data.length-1, 1);
-          //   this.stocks = data;
-          //   console.log(this.stocks);
-          // });
         });
       });
+
     }
+
     else {
       this.exceededAPI = true;
       this.errorMessage = "Stock item is already displayed."
     }
+
   }
 
-  // changes colour depending if it's a pos or neg number 
+  // changes colour depending if it's a positive or negative number 
   getColour(value: string) {
     if (+value >= 0) return "text-success";
     else return "text-danger";
@@ -76,37 +56,26 @@ export class StocksComponent implements OnInit {
 
   // changing the editing array for editing personal stock values 
   edit(index: number) {
-    console.log("editing " + index);
+    console.log("Editing " + index);
     this.editing[index] = true;
   }
 
   delete(index: number) {
-    console.log("deleting" + index);
+    console.log("Deleting" + index);
     this.getStockBoughtService.deleteStock(index).subscribe(data => {
-      console.log(data);
       this.getStocksBought();
-
-    })
+    });
   }
 
-  // saving the personal stock values into db
+  // saving the cutomized stock names into db
   save(index: number, value: string) {
 
-    console.log("saving " + value + " into " + index);
+    console.log("Saving " + value + " into " + index);
+
     this.editing[index] = false;
     this.getStockBoughtService.editStock(value, index).subscribe(data => {
-      console.log(data);
       this.getStocksBought();
-
     });
-    // this.getStockBoughtService.saveStock({
-    //   stockName: "test",
-    //   stockNumber: 2,
-    //   stockValue: (+value).toFixed(2)
-    // }, index).subscribe(data => {
-    //   console.log(data);
-    //   this.valueOfBought = data;
-    // })
 
   }
 
@@ -116,119 +85,68 @@ export class StocksComponent implements OnInit {
 
   // getting stocks from API call 
   getStocks() {
-
-    let stockObject;
-    console.log("hio");
-    // try {
     this.stockService.getStocks().subscribe(data => {
-      // if (data.length != this.stockService.nameOfStock.length) {
-      //   this.getStocksBought();
-      //   console.log("here");
-      //   console.log(data.length );
-      //   console.log(this.stockService.nameOfStock.length );
-      console.log("hio2");
-
-      // }
-      // else {
-      console.log(data);
       this.stocks = data;
-      console.log(this.stocks);
-      // }
-
-      // this.getStocksBought();
-
-
-      // this.stockService.stocksObjects = [];
-      // this.http.put('http://127.0.0.1:3000/stocks/updateValues', data, {
-      //   observe: 'body',
-      //   withCredentials: true,
-      //   headers: new HttpHeaders().append('Content-Type', 'application/json')
-      // }).subscribe(data2 => {
-      //   console.log(data2);
-      // });
+      console.log("Stocks displaying: " + this.stocks);
     });
-
-    // console.log(stockObject);
-
-    // this.stocks = [];
-    // this.stocks = stockObject["__zone_symbol__value"];
-    // console.log(this.stocks);
-    // this.http.put('http://127.0.0.1:3000/stocks/updateValues', this.stocks, {
-    //   observe: 'body',
-    //   withCredentials: true,
-    //   headers: new HttpHeaders().append('Content-Type', 'application/json')
-    // }).subscribe(data => {
-    //   console.log(data);
-    // });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
   }
 
   apiCall() {
     this.getStockBoughtService.getStockBought().subscribe(data => {
-      console.log(data);
       this.getStocks();
     });
   }
 
-  // getting personal stocks values 
+  // getting personal stocks values from db 
   getStocksBought() {
-
     this.getStockBoughtService.getStockBought().subscribe(data => {
-      console.log(data);
+      // if any values are null, disregard that item 
       if (data[data.length - 1] != null && data[data.length - 1].valueDiff == null) data.splice(data.length - 1, 1);
       this.stocks = data;
-      // this.getStocks();
     });
-
   }
 
   constructor(private stockService: StockService,
     private getStockBoughtService: GetStocksBoughtService,
-    private http: HttpClient,
-    public sanitizer: DomSanitizer,
     private user: UserService,
     private router: Router) {
-    this.user.user().subscribe(
+
+    // checking if the user is validated 
+    this.user.validate().subscribe(
       data => {
-        console.log(data);
-        // this.user.loggedIn = true;
-        // this.loggedIn = true;
         this.user.changeLoggedIn(true);
       },
       error => this.router.navigate(['/login'])
     );
-    this.stockService.currentMessage.subscribe(data => {
-      console.log(data);
+
+    // checking for if there was an error 
+    this.stockService.currentError.subscribe(data => {
       this.exceededAPI = data;
     });
-    this.stockService.refresh.subscribe(data => {
+
+    // checking for if there are stocks being refreshed 
+    this.stockService.currentRefreshStocks.subscribe(data => {
       if (data == true) {
         this.getStocksBought();
         this.stockService.changeRefreshVar(false);
-      }
-    })
-    this.stockService.errorM.subscribe(data => {
+      };
+    });
+
+    // checking for the error messages 
+    this.stockService.currentErrorMessage.subscribe(data => {
       if (data != null) {
         let message = data["Error Message"] || data["Note"];
         if (message.includes("Invalid")) this.errorMessage = 'Incorrect symbol. Please enter a valid stock symbol (Eg. "tsla", "msft")';
         else if (message.includes("standard")) this.errorMessage = "Exceeded maximum API call frequency (5 calls per minute and 500 calls per day). Please try again later.";
       }
-      console.log(data);
-    })
+    });
+
     this.exceededAPI = false;
 
   }
 
   ngOnInit(): void {
-    // this.getStocks();
     this.getStocksBought();
-    // this.link = "https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8";
-    // this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl("https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8");
-    // this.urlSafe[1] = this.sanitizer.bypassSecurityTrustResourceUrl("https://www.google.com/search?q=shop+stocks&rlz=1C1CHBF_enCA778CA779&oq=shop+stocks&aqs=chrome.0.69i59j69i57j69i59j69i64j69i60l4.1069j0j1&sourceid=chrome&ie=UTF-8");
-
   }
 
 }

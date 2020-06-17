@@ -13,24 +13,20 @@ export class LogoutComponent implements OnInit {
     this.user.logout().subscribe(
       data => {
         console.log(data);
-        // this.user.loggedIn = false;
         this.user.changeLoggedIn(false);
-
         this.router.navigate(['/login']);
       },
       error => {
         console.log(error)
         this.router.navigate(['/login']);
       }
-    )
+    );
   }
 
   constructor(private user: UserService, private router: Router) {
     this.logout();
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
 }

@@ -2,25 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
-const link = 'https://manage-my-stocks-database.herokuapp.com';
-// const link = 'http://127.0.0.1:3000';
+// const link = 'https://manage-my-stocks-database.herokuapp.com';
+const link = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  
-  event = new BehaviorSubject(null);
-  currentMessage = this.event.asObservable();
 
-  constructor(private http: HttpClient) { 
-    // this.loggedIn = false;
-  }
+  // stores whether or not the user is logged in
+  loggedIn = new BehaviorSubject(null);
+  currentLoggedIn = this.loggedIn.asObservable();
 
-  loggedIn: boolean; 
-  
-  changeLoggedIn(message: boolean) {
-    this.event.next(message);
+  changeLoggedIn(logInAction: boolean) {
+    this.loggedIn.next(logInAction);
   }
 
   register(body: any) {
@@ -38,14 +33,6 @@ export class UserService {
     });
   }
 
-  user() {
-    return this.http.get(link + '/users/transactions', {
-      observe: 'body',
-      withCredentials: true,
-      headers: new HttpHeaders().append('Content-Type', 'application/json')
-    });
-  }
-
   logout() {
     return this.http.get(link + '/users/logout', {
       observe: 'body',
@@ -53,5 +40,15 @@ export class UserService {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
     });
   }
+
+  validate() {
+    return this.http.get(link + '/users/validate', {
+      observe: 'body',
+      withCredentials: true,
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    });
+  }
+
+  constructor(private http: HttpClient) { }
 
 }

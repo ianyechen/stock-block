@@ -23,7 +23,9 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+
     if (this.loginForm.valid) {
+
       this._user.login(JSON.stringify(this.loginForm.value)).subscribe(data => {
         console.log(data);
         this._user.changeLoggedIn(true);
@@ -33,23 +35,24 @@ export class LoginComponent implements OnInit {
         this.error = true;
         if (error.error.message.includes("username")) this.errorMessage = "Incorrect email. Please try again.";
         else this.errorMessage = "Incorrect password. Please try again.";
-      })
-      console.log(JSON.stringify(this.loginForm.value));
+      });
+
+      console.log("The forms values are: " + JSON.stringify(this.loginForm.value));
+
     }
+
     else {
-      console.log('Invalid');
+      console.log('Invalid form.');
       this.error = true;
       this.errorMessage = "Invalid inputs. Please try again.";
     }
+
   }
 
   constructor(private _user: UserService, private _router: Router) {
-    // this.user.loggedIn = true;
-    // this.loggedIn = true;
     this._user.changeLoggedIn(false);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }

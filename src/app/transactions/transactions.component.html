@@ -1,4 +1,5 @@
 <br>
+
 <ng-container *ngIf="loggedIn">
     <div>
         <form>
@@ -11,7 +12,8 @@
                 </div>
                 <div class="col">
                     <label for="formGroupvalueBuyInput">Buy Price</label>
-                    <input #valueBuy type="text" class="form-control" id="formGroupvalueBuyInput" placeholder="Buy Price">
+                    <input #valueBuy type="text" class="form-control" id="formGroupvalueBuyInput"
+                        placeholder="Buy Price">
                 </div>
                 <div class="col">
                     <label for="formGroupdateBuyInput">Buy Date</label>
@@ -19,7 +21,8 @@
                 </div>
                 <div class="col">
                     <label for="formGroupnumberBuyInput">Amount</label>
-                    <input #numberBuy type="text" class="form-control" id="formGroupnumberBuyInput" placeholder="Amount">
+                    <input #numberBuy type="text" class="form-control" id="formGroupnumberBuyInput"
+                        placeholder="Amount">
                 </div>
                 <div class="col">
                     <br>
@@ -29,9 +32,10 @@
             </div>
         </form>
     </div>
-    <br><br>
 
-    <!-- <h6>我目前有的股票</h6> -->
+    <br>
+    <br>
+
     <table class="table table-fixed">
         <thead class="thead-dark">
             <tr>
@@ -59,9 +63,10 @@
             </ng-container>
         </tbody>
     </table>
-    <br><br>
 
-    <!-- Example single danger button -->
+    <br>
+    <br>
+
     <div class="btn-group">
         <button (click)="fillStockNames()" type="button" class="btn btn-outline-primary dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,11 +82,7 @@
     <div style="float: right; margin-right: 2vw;">
         <h6><strong> Total Net Gain/Loss: ${{ totalAmountOfMoney }} </strong></h6>
     </div>
-    <!-- <div class="row">
-    <div class="col-md-8">.col-md-8</div>
-    <div class="col-md-4">.col-md-4</div>
-</div> -->
-    <!-- <h6>所有買賣記錄</h6> -->
+
     <table class="table table-fixed">
         <thead class="thead-dark">
             <tr>
@@ -139,7 +140,6 @@
         </tbody>
     </table>
 
-
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -160,7 +160,8 @@
                         </div>
                         <div class="form-group">
                             <label for="formGroupdateSell">Sell Date</label>
-                            <input #dateSell type="text" class="form-control" id="formGroupdateSell" placeholder="Sell Date">
+                            <input #dateSell type="text" class="form-control" id="formGroupdateSell"
+                                placeholder="Sell Date">
                         </div>
                     </form>
                 </div>
