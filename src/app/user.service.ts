@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
-// const link = 'https://manage-my-stocks-database.herokuapp.com';
-const link = 'http://127.0.0.1:3000';
+const link = 'https://manage-my-stocks-database.herokuapp.com';
+// const link = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'

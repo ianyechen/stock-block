@@ -33,8 +33,9 @@ export class LoginComponent implements OnInit {
       }, error => {
         console.log(error);
         this.error = true;
-        if (error.error.message.includes("username")) this.errorMessage = "Incorrect email. Please try again.";
-        else this.errorMessage = "Incorrect password. Please try again.";
+        if (error.error.message && error.error.message.includes("username")) this.errorMessage = "Incorrect email. Please try again.";
+        else if (error.error.message && error.error.message.includes("password")) this.errorMessage = "Incorrect password. Please try again.";
+        else this.errorMessage = "There is currently a problem with the server. Please try again later.";
       });
 
       console.log("The forms values are: " + JSON.stringify(this.loginForm.value));

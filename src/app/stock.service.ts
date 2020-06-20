@@ -4,11 +4,11 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import fetch from 'node-fetch';
 
-// const key = process.env.KEY;
-// const url = 'https://manage-my-stocks-database.herokuapp.com';
+const key = process.env.KEY;
+const url = 'https://manage-my-stocks-database.herokuapp.com';
 
-const key = require('../../key.json').key;
-const url = 'http://127.0.0.1:3000';
+// const key = require('../../key.json').key;
+// const url = 'http://127.0.0.1:3000';
 
 @Injectable({
   providedIn: 'root'
