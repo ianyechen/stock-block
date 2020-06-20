@@ -2,7 +2,7 @@
 
 A web application that allows users to keep track of their favourite stocks and record down all of their transactions history.
 
-[Try it out now!](https://manage-my-stocks.herokuapp.com)
+[Try it out now!](https://stock-block-101.herokuapp.com/)
 
 ## Get Started 
 
